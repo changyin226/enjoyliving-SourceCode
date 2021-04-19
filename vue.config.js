@@ -1,3 +1,5 @@
-export default {
-  publicPath: process.env.NODE_ENV === 'production' ? '/enjoyliving.com.tw/' : '/',
+module.exports = {
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/vue-demo/'
+    : '/',
 };
