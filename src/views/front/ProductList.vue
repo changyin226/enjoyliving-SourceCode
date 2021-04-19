@@ -37,7 +37,7 @@
           <div class="col-md-4"
             v-for="product in perPageProducts[currentPage - 1]"
             :key="category + product.id">
-            <ProductCard :product="product"></ProductCard>
+            <ProductCard :product="product" @change-isLoading="isLoading = $event"></ProductCard>
           </div>
         </div>
       <div class="row py-5" v-if="products[0]" :key="category + currentPage">

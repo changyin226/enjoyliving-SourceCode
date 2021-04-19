@@ -75,7 +75,7 @@
         </h2>
         <swiper class="swiper" :options="swiperOptions">
           <swiper-slide v-for="item in similarProducts" :key="item.id">
-            <ProductCard :product="item"></ProductCard>
+            <ProductCard :product="item" @change-isLoading="isLoading = $event"></ProductCard>
           </swiper-slide>
           <div class="swiper-button-next" slot="button-next"></div>
           <div class="swiper-button-prev" slot="button-prev"></div>
@@ -176,6 +176,7 @@ export default {
       });
     },
     addToCart(qty) {
+      this.isLoading = true;
       const cartArray = JSON.parse(localStorage.getItem('cartProducts')) || [];
       const cacheId = cartArray.map((product) => product.product_id);
       if (cacheId.includes(this.product.id)) {
@@ -201,6 +202,9 @@ export default {
       localStorage.setItem('cartProducts', JSON.stringify(cartArray));
       this.$bus.$emit('update:cartNum');
       this.$bus.$emit('message:push', '已加入購物車', 'primary');
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 500);
     },
     toggleFavorite(isFavorite) {
       const { title } = this.product;

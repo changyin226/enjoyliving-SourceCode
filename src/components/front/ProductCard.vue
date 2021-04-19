@@ -50,6 +50,7 @@ export default {
       this.$router.push(`/product/${this.product.id}`);
     },
     addToCart() {
+      this.$emit('change-isLoading', true);
       const cartArray = JSON.parse(localStorage.getItem('cartProducts')) || [];
       const cacheId = cartArray.map((product) => product.product_id);
       if (cacheId.includes(this.product.id)) {
@@ -75,6 +76,9 @@ export default {
       localStorage.setItem('cartProducts', JSON.stringify(cartArray));
       this.$bus.$emit('update:cartNum');
       this.$bus.$emit('message:push', '已加入購物車', 'primary');
+      setTimeout(() => {
+        this.$emit('change-isLoading', false);
+      }, 500);
     },
   },
 };

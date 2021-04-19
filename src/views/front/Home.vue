@@ -70,7 +70,7 @@
         <div class="col-md-4 animate__animated"
           v-for="product in firstSixProducts" :key="product.id"
           v-waypoint="{ active: true, callback: onWaypointList }">
-          <ProductCard :product="product"></ProductCard>
+          <ProductCard :product="product" @change-isLoading="isLoading = $event"></ProductCard>
         </div>
       </div>
     </div>
