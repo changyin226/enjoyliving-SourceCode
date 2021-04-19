@@ -14,7 +14,7 @@
         <div class="col-md-4">
           <router-link :to="`/checkout/${orderId}`" class="btn d-block mb-3">查看訂單</router-link>
           <router-link to="/productlist/all/1" class="btn d-block mb-3">繼續購物</router-link>
-          <router-link to="/" class="btn d-block">回首頁</router-link>
+          <router-link to="/" class="btn d-block mb-5">回首頁</router-link>
         </div>
       </div>
     </div>
