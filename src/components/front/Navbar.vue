@@ -18,6 +18,9 @@
           <router-link to="/contact">聯絡我們</router-link>
         </li>
         <li>
+          <router-link to="/login">後台登入</router-link>
+        </li>
+        <li>
           <router-link to="/cart">
             <span>
               <small v-if="cartsNum">{{ cartsNum }}</small>
@@ -44,17 +47,22 @@
                 <router-link to="/productlist/all/1">產品</router-link>
               </li>
               <li class="mx-3">
-                <router-link to="/favorites/1">喜好項目</router-link>
-              </li>
-              <li class="mx-3">
                 <router-link to="/about">關於我們</router-link>
               </li>
               <li class="mx-3">
                 <router-link to="/contact">聯絡我們</router-link>
               </li>
+              <li class="mx-3">
+                <router-link to="/login">後台登入</router-link>
+              </li>
             </ul>
           </div>
           <div class="col-2 ml-auto cart">
+            <router-link to="/favorites/1" title="查看喜好項目">
+              <span>
+                <i class="fa fa-heart-o mr-3"></i>
+              </span>
+            </router-link>
             <router-link to="/cart" title="查看購物車">
               <span>
                 <small v-if="cartsNum">{{ cartsNum }}</small>
