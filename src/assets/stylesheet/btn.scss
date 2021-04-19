@@ -1,0 +1,16 @@
+.front-end-page{
+  .btn{
+    color: #00d2ff;
+    border: 1px solid #00d2ff;
+    &.disabled{
+      pointer-events: none;
+    }
+    &:hover {
+      color: #fff;
+      background: linear-gradient(135deg, #00cdac 0%, #00d2ff 100%);
+    }
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}

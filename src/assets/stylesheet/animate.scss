@@ -1,0 +1,15 @@
+.animate__animated{
+  visibility: hidden;
+}
+.animate__fadeInUp, .animate__fadeInRight{
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate__animated{
+    visibility: visible;
+  }
+  .animate__fadeInUp, .animate__fadeInRight{
+    animation: none;
+  }
+}

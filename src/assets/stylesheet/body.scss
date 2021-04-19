@@ -1,0 +1,38 @@
+body{
+  font-family: "SF Pro TC","SF Pro Display","SF Pro Icons","PingFang TC","Helvetica Neue","Helvetica","Arial",sans-serif;
+  h2{
+    font-size: 24px;
+    line-height: 1.5;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #000;
+    text-transform: uppercase;
+  }
+  h3{
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  p{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #828282;
+  }
+  #app{
+    overflow-x: hidden;
+  }
+  &.backend{
+    font-size: 0.875rem;
+    background: rgba(0, 0, 0, 0.8);
+    h2{
+      color: #fff;
+    }
+    &.no-scroll{
+      overflow: hidden;
+    }
+  }
+  &.off-canvas-back{
+    overflow: hidden;
+  }
+}
