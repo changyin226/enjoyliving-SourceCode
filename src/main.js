@@ -6,7 +6,9 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 import VueWaypoint from 'vue-waypoint';
 import animated from 'animate.css';
 import 'bootstrap';
-import { ValidationObserver, ValidationProvider, extend, localize, configure } from 'vee-validate';
+import {
+  ValidationObserver, ValidationProvider, extend, localize, configure,
+} from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
 import tw from 'vee-validate/dist/locale/zh_TW.json';
 import App from '@/App.vue';

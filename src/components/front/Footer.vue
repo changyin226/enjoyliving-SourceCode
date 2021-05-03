@@ -12,7 +12,7 @@
         </div>
         <div class="row justify-content-center pb-5">
           <div class="col-md-8">
-            <form class="d-sm-flex">
+            <form class="d-sm-flex" @submit.prevent>
               <input type="email" class="form-control mr-sm-3 mb-3 mb-sm-0"
               name="email" placeholder="Email">
               <button type="submit" class="btn btn-block">開始訂閱</button>
@@ -27,22 +27,22 @@
       </span>
       <ul class="d-flex justify-content-center pt-3 icon-list">
         <li class="px-2">
-          <a href="#" target="_blank">
+          <a href="#" target="_blank" @click.prevent>
             <i class="fa fa-twitter"></i>
           </a>
         </li>
         <li class="px-2">
-          <a href="#" target="_blank">
+          <a href="#" target="_blank" @click.prevent>
             <i class="fa fa-facebook-official"></i>
           </a>
         </li>
         <li class="px-2">
-          <a href="#" target="_blank">
+          <a href="#" target="_blank" @click.prevent>
             <i class="fa fa-linkedin-square"></i>
           </a>
         </li>
         <li class="px-2">
-          <a href="#" target="_blank">
+          <a href="#" target="_blank" @click.prevent>
             <i class="fa fa-dribbble"></i>
           </a>
         </li>

@@ -1,7 +1,15 @@
 <template>
   <div class="home-page">
     <loading :active.sync="isLoading" color="#00d2ff" :lock-scroll="true"></loading>
-    <div class="banner"></div>
+    <div class="banner">
+      <p>
+        享住Enjoy Living
+        <br>
+        您最好的家具選擇
+        <br>
+        <router-link class="btn" to="/productlist/all/1">立即選購產品</router-link>
+      </p>
+    </div>
     <div class="services pt-5">
       <div class="container py-5">
         <div class="row">
@@ -40,7 +48,7 @@
           </div>
         </div>
       </div>
-      <div class="coupon container mt-5 animate__animated"
+      <div class="coupon container mt-5 p-0 animate__animated"
         v-waypoint="{ active: true, callback: onWaypoint }">
         <p>
           慶祝開店滿一週年
@@ -144,6 +152,25 @@ export default {
   .banner{
     background: url(../../assets/images/HomeBanner.jpg) center;
     background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p{
+      font-weight: bold;
+      letter-spacing: 5px;
+      color: #00d2ff;
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 0;
+      width: 100%;
+      max-width: 600px;
+      padding: 50px 0;
+      background: rgba(0, 0, 0, 0.4);
+    }
+    a{
+      font-weight: bold;
+      margin-top: 30px;
+    }
   }
   .services{
     .feature {
@@ -171,14 +198,15 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    letter-spacing: 2px;
+    letter-spacing: 5px;
     p{
       font-size: 24px;
       font-weight: bold;
       color: #fff;
       text-align: center;
-      width: 90%;
-      padding: 50px 10px;
+      width: 100%;
+      padding: 50px 0;
+      margin-bottom: 0;
       background: rgba(0, 0, 0, 0.25);
     }
     span{

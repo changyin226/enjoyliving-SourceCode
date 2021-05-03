@@ -94,14 +94,8 @@ export default {
   },
   computed: {
     filterCategoryProduct() {
-      const newProducts = [];
       if (this.category === '全部') return this.products;
-      this.products.forEach((product) => {
-        if (product.category === this.category) {
-          newProducts.push(product);
-        }
-      });
-      return newProducts;
+      return this.products.filter((product) => product.category === this.category);
     },
     perPageProducts() {
       const newProducts = [];

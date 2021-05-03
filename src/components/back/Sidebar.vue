@@ -53,8 +53,10 @@ export default {
 
 <style lang="scss">
 .sidebar-component{
-  .active{
-    color: #00d2ff !important;
+  ul.nav{
+    a.active{
+      color: #00d2ff;
+    }
   }
 }
 </style>

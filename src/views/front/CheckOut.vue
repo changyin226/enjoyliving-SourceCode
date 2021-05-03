@@ -88,8 +88,7 @@ export default {
       width: 60%;
       z-index: -1;
       border-top: 1px solid;
-      border-image: linear-gradient(135deg, #00d2ff 0%, #00cdac 100%);
-      border-image-slice: 1;
+      color: #00d2ff;
     }
   }
   .form-group{

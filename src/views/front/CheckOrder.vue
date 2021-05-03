@@ -67,13 +67,16 @@
         v-waypoint="{ active: true, callback: onWaypointList }">
         收件人資料
       </h2>
-        <ValidationObserver v-slot="{handleSubmit}">
+        <ValidationObserver v-slot="{ invalid }">
           <div class="row justify-content-center animate__animated"
             v-waypoint="{ active: true, callback: onWaypointList }">
-            <form class="col-md-8" @submit.prevent="handleSubmit(createOrder)">
+            <form class="col-md-8" @submit.prevent>
               <ValidationProvider rules="required|email" v-slot="{ errors, classes }">
                 <div class="form-group">
-                  <label for="email">Email</label>
+                  <label for="email">
+                    Email
+                    <span class="badge badge-danger">必填*</span>
+                  </label>
                   <input type="email" id="email" name="信箱" v-model="form.user.email"
                       class="form-control" :class="classes"
                       placeholder="請輸入 Email">
@@ -82,7 +85,10 @@
               </ValidationProvider>
               <ValidationProvider rules="required" v-slot="{ errors, classes }">
                 <div class="form-group">
-                  <label for="username">姓名</label>
+                  <label for="username">
+                    姓名
+                    <span class="badge badge-danger">必填*</span>
+                  </label>
                   <input type="text" id="username" name="姓名" v-model="form.user.name"
                       class="form-control" :class="classes"
                       placeholder="請輸入姓名">
@@ -91,7 +97,10 @@
               </ValidationProvider>
               <ValidationProvider rules="required" v-slot="{ errors, classes }">
                 <div class="form-group">
-                  <label for="usertel">電話</label>
+                  <label for="usertel">
+                    電話
+                    <span class="badge badge-danger">必填*</span>
+                  </label>
                   <input type="tel" id="usertel" name="電話" v-model="form.user.tel"
                       class="form-control" :class="classes"
                       placeholder="請輸入電話">
@@ -100,7 +109,10 @@
               </ValidationProvider>
               <ValidationProvider rules="required" v-slot="{ errors, classes }">
                 <div class="form-group">
-                  <label for="useraddress">地址</label>
+                  <label for="useraddress">
+                    地址
+                    <span class="badge badge-danger">必填*</span>
+                  </label>
                   <input type="text" id="useraddress" name="地址" v-model="form.user.address"
                       class="form-control" :class="classes"
                       placeholder="請輸入地址">
@@ -113,7 +125,8 @@
                   v-model="form.message"></textarea>
               </div>
             <div class="text-right mb-5">
-              <button type="submit" class="btn">送出訂單</button>
+              <button type="submit" class="btn" :disabled="invalid"
+              data-toggle="modal" data-target="#comfirmModal">送出訂單</button>
             </div>
           </form>
         </div>
@@ -132,10 +145,14 @@
         <router-link to="/productlist/all/1" class="btn">SHOP</router-link>
       </div>
     </div>
+    <comfirmModal @create-order="createOrder"></comfirmModal>
   </div>
 </template>
 
 <script>
+import comfirmModal from '@/components/front/comfirmModal.vue';
+import $ from 'jquery';
+
 export default {
   data() {
     return {
@@ -180,6 +197,7 @@ export default {
           }
           if (cartArray.length) {
             for (let i = 0; i < cartArray.length; i += 1) {
+              // eslint-disable-next-line no-await-in-loop
               await postReq(cartArray[i]);
             }
             this.getCartList();
@@ -222,6 +240,7 @@ export default {
       this.couponCode = '';
     },
     createOrder() {
+      $('#comfirmModal').modal('hide');
       this.isLoading = true;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`;
       this.$http.post(api, { data: this.form }).then((response) => {
@@ -246,6 +265,9 @@ export default {
         }, index * 300);
       }
     },
+  },
+  components: {
+    comfirmModal,
   },
   mounted() {
     this.postCartList();
@@ -275,18 +297,13 @@ export default {
       visibility: visible;
     }
   }
-  button.btn:disabled:hover{
-    cursor: not-allowed;
-    background: none;
-    color: #00d2ff;
-  }
 }
 @media(max-width: 768px){
   .check-order-page{
     button.btn{
       &:hover{
-        color: #00d2ff !important;
-        background: none !important;
+        color: #00d2ff;
+        background: none;
       }
     }
   }

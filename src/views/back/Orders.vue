@@ -28,7 +28,8 @@
             <span v-else class="text-danger">尚未付款</span>
           </td>
           <td>
-            <button class="btn btn-outline-primary btn-sm" @click="openModal(order)">更多</button>
+            <button type="button" class="btn btn-outline-primary btn-sm"
+              @click="openModal(order)">更多</button>
           </td>
         </tr>
       </tbody>

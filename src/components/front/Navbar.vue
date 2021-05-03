@@ -2,7 +2,7 @@
   <div class="navbar-component" :class="{'off-canvas-navbar-component': isOffCanvas}">
     <transition name="transform">
       <ul class="off-canvas p-5" v-show="isOffCanvas">
-        <button type="button" class="close-toggle" @click="hideOffCanvas">
+        <button type="button" class="close-toggle" @click="toggleOffCanvas">
           <i class="fa fa-times"></i>
         </button>
         <li>
@@ -32,7 +32,7 @@
     </transition>
     <nav class="nav-bar">
       <div class="container py-4">
-        <button type="button" class="nav-toggle" @click.stop="showOffCanvas">
+        <button type="button" class="nav-toggle" @click.stop="toggleOffCanvas(true)">
           <i class="fa fa-bars"></i>
         </button>
         <div class="row">
@@ -89,28 +89,28 @@ export default {
       const cartArray = JSON.parse(localStorage.getItem('cartProducts')) || [];
       this.cartsNum = cartArray.length;
     },
-    showOffCanvas() {
+    toggleOffCanvas(isOpen = false) {
       const bodyEl = document.body;
-      bodyEl.addEventListener('click', this.bodyElClick, true);
-      bodyEl.classList.add('off-canvas-back');
-      this.isOffCanvas = true;
-    },
-    hideOffCanvas() {
-      const bodyEl = document.body;
-      bodyEl.removeEventListener('click', this.bodyElClick, true);
-      bodyEl.classList.remove('off-canvas-back');
-      this.isOffCanvas = false;
+      if (isOpen) {
+        bodyEl.addEventListener('click', this.bodyElClick, true);
+        bodyEl.classList.add('off-canvas-back');
+        this.isOffCanvas = true;
+      } else {
+        bodyEl.removeEventListener('click', this.bodyElClick, true);
+        bodyEl.classList.remove('off-canvas-back');
+        this.isOffCanvas = false;
+      }
     },
     bodyElClick(e) {
       e.stopPropagation();
       if (e.target.className !== 'off-canvas p-5' && e.target.nodeName !== 'LI') {
-        this.hideOffCanvas();
+        this.toggleOffCanvas();
       }
     },
   },
   mounted() {
     this.$bus.$on('update:cartNum', this.getCartsNumber);
-    this.$bus.$on('hideOffCanvas', this.hideOffCanvas);
+    this.$bus.$on('hideOffCanvas', this.toggleOffCanvas);
     this.getCartsNumber();
   },
 };
@@ -123,7 +123,7 @@ export default {
   height: 66px;
   background: rgba(255, 255, 255, 0.95);
   top: 0;
-  z-index: 1;
+  z-index: 10;
   transition: 0.3s;
   .transform-enter-active, .transform-leave-active{
     transition: all 0.3s;
@@ -156,39 +156,39 @@ export default {
         cursor: pointer;
       }
     }
-    .nav-toggle{
-      color: #828282;
-      display: none;
-      font-size: 24px;
-      background: none;
-      border: none;
-      padding: 0;
+  }
+  .nav-toggle{
+    color: #828282;
+    display: none;
+    font-size: 24px;
+    background: none;
+    border: none;
+    padding: 0;
+    position: absolute;
+    top: 20px;
+    right: 15px;
+    &:focus{
+      outline: none;
+    }
+  }
+  .cart{
+    text-align: end;
+  }
+  span{
+    position: relative;
+    small{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
+      height: 20px;
+      font-size: 14px;
+      background: #00d2ff;
+      color: #fff;
+      border-radius: 50%;
       position: absolute;
-      top: 20px;
-      right: 15px;
-      &:focus{
-        outline: none;
-      }
-    }
-    .cart{
-      text-align: end;
-    }
-    span{
-      position: relative;
-      small{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 20px;
-        height: 20px;
-        font-size: 14px;
-        background: #00d2ff;
-        color: #fff;
-        border-radius: 50%;
-        position: absolute;
-        top: -12px;
-        right: -14px;
-      }
+      top: -12px;
+      right: -14px;
     }
   }
   .off-canvas{
@@ -199,7 +199,7 @@ export default {
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 2;
+    z-index: 100;
     margin-bottom: 0;
     a{
       padding: 12px 0;
@@ -209,17 +209,17 @@ export default {
       font-size: 24px;
       margin-top: 20px;
     }
-    .close-toggle{
-      color: #828282;
-      font-size: 30px;
-      background: none;
-      border: none;
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      &:focus{
-        outline: none;
-      }
+  }
+  .close-toggle{
+    color: #828282;
+    font-size: 30px;
+    background: none;
+    border: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    &:focus{
+      outline: none;
     }
   }
   &.off-canvas-navbar-component{
@@ -230,7 +230,7 @@ export default {
 @media(max-width: 768px){
   .nav-bar{
     .nav-toggle{
-      display: block !important;
+      display: block;
     }
     .menu, .cart{
       display: none;

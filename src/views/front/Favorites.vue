@@ -14,7 +14,10 @@
       </div>
       <div class="row">
         <div class="col-md-4"
-          v-for="product in perPageProducts[currentPage - 1]" :key="product.id">
+          v-for="(product, i) in perPageProducts[currentPage - 1]" :key="product.id">
+          <button type="button" class="delete-favorite" @click="delFavorite(i)" title="移除喜好項目">
+            <i class="fa fa-heart"></i>
+          </button>
           <ProductCard :product="product" @change-isLoading="isLoading = $event"></ProductCard>
         </div>
       </div>
@@ -93,6 +96,11 @@ export default {
         el.classList.add('animate__fadeInUp');
       }
     },
+    delFavorite(i) {
+      this.favoriteProducts.splice(i, 1);
+      this.favoriteTitles.splice(i, 1);
+      localStorage.setItem('favoriteProducts', JSON.stringify(this.favoriteTitles));
+    },
   },
   components: {
     ProductCard,
@@ -122,6 +130,29 @@ export default {
   .banner{
     background: url('../../assets/images/FavoritesBanner.jpg') center;
     background-size: cover;
+  }
+  .delete-favorite{
+    position: absolute;
+    font-size: 30px;
+    color: #00d2ff;
+    background: none;
+    border: none;
+    padding: 0;
+    top: 15px;
+    left: 30px;
+    z-index: 1;
+    i{
+      transition: 0.3s;
+    }
+    &:hover{
+      cursor: pointer;
+      i{
+        transform: scale(1.2,1.2);
+      }
+    }
+    &:focus{
+      outline: none;
+    }
   }
 }
 </style>

@@ -7,7 +7,7 @@
       <img class="product-page-img" :src="product.imgUrl2" alt="商品圖片" @load="show = true">
       <div v-if="show">
         <div class="product-info animate__animated"
-          :key="product.title + 'Info'"
+          :key="`Info:${product.title}`"
           v-waypoint="{ active: true, callback: onWaypointList }">
           <h2>{{ product.title }}</h2>
           <span>{{ product.description }}</span>
@@ -20,7 +20,7 @@
           <h3 v-else> NT {{ product.price | currency }} / {{ product.unit }} </h3>
         </div>
         <div class="row justify-content-center align-items-center mb-3 animate__animated"
-          :key="product.title + 'form'"
+          :key="`form:${product.title}`"
           v-waypoint="{ active: true, callback: onWaypointList }">
           <div class="col-md-4 mb-3">
             <select class="form-control" v-model="product.num">
@@ -44,7 +44,7 @@
         <div class="row justify-content-center">
           <div class="col-md-10 mb-3">
             <div class="product-detail animate__animated"
-              :key="product.title + 'detail'"
+              :key="`detail:${product.title}`"
               v-waypoint="{ active: true, callback: onWaypointList }">
               <ul class="tab-nav">
                 <li :class="{active: tabNav === 'detail'}">
@@ -55,7 +55,7 @@
                 </li>
               </ul>
               <transition name="fade" mode="out-in">
-                <p ref="height" v-if="tabNav === 'detail'"  key="detail">
+                <p ref="height" v-if="tabNav === 'detail'" key="detail">
                   {{ product.content }}
                 </p>
                 <p v-else key="size" :style="{height: heightRef + 'px'}">
@@ -261,7 +261,7 @@ export default {
 <style lang="scss">
 .product-page{
   .fade-enter-active, .fade-leave-active {
-    transition: all 0.15s;
+    transition: all 0.2s;
   }
   .fade-enter, .fade-leave-t{
     opacity: 0;
@@ -318,61 +318,11 @@ export default {
       box-shadow: none;
     }
   }
-  .toogle-favorite{
-    font-size: 30px;
-    color: #00d2ff;
-    background: none;
-    border: none;
-    i{
-      transition: 0.3s;
-    }
-    &:hover{
-      cursor: pointer;
-      i{
-        transform: scale(1.2,1.2);
-      }
-    }
-    &:focus{
-      outline: none;
-    }
-  }
   .product-detail{
     p{
       width: 90%;
       margin: 0 auto;
       letter-spacing: 2px;
-    }
-  }
-  .tab-nav{
-    display: flex;
-    list-style: none;
-    margin: 0 auto 30px auto;
-    padding: 3px;
-    background: #f2f2f2;
-    border-radius: 4px;
-    li{
-      width: 100%;
-      &.active{
-        button{
-          background: #fff;
-          color: #00d2ff;
-        }
-      }
-    }
-    button{
-      width: 100%;
-      padding: 20px;
-      color: #b3b3b3;
-      transition: 0.3s;
-      border: none;
-      background: none;
-      border-radius: 4px;
-      &:hover{
-        color: #000;
-      }
-      &:focus{
-        outline: none;
-      }
     }
   }
   .container-fluid{
@@ -395,18 +345,68 @@ export default {
     }
   }
 }
+.toogle-favorite{
+  font-size: 30px;
+  color: #00d2ff;
+  background: none;
+  border: none;
+  i{
+    transition: 0.3s;
+  }
+  &:hover{
+    cursor: pointer;
+    i{
+      transform: scale(1.2,1.2);
+    }
+  }
+  &:focus{
+    outline: none;
+  }
+}
+.tab-nav{
+  display: flex;
+  list-style: none;
+  margin: 0 auto 30px auto;
+  padding: 3px;
+  background: #f2f2f2;
+  border-radius: 4px;
+  li{
+    width: 100%;
+    &.active{
+      button{
+        background: #fff;
+        color: #00d2ff;
+      }
+    }
+  }
+  button{
+    width: 100%;
+    padding: 20px;
+    color: #b3b3b3;
+    transition: 0.3s;
+    border: none;
+    background: none;
+    border-radius: 4px;
+    &:hover{
+      color: #000;
+    }
+    &:focus{
+      outline: none;
+    }
+  }
+}
 @media(max-width: 768px){
   .toogle-favorite{
     &:hover{
       i{
-        transform: none !important;
+        transform: none;
       }
     }
   }
-  button.add-cart-btn{
-    &:hover{
-      color: #00d2ff !important;
-      background: none !important;
+  .product-page{
+    button.add-cart-btn:hover{
+      color: #00d2ff;
+      background: transparent;
     }
   }
 }

@@ -177,9 +177,9 @@ export default {
 @media(max-width: 768px){
   .product-card-component{
     margin-bottom: 70px;
-  }
-  .product-img-inner{
-    display: none !important;
+    .product-img-inner{
+      display: none;
+    }
   }
 }
 </style>

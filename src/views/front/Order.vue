@@ -87,7 +87,7 @@
         </div>
       </div>
     </div>
-    <router-view :orderId="orderId"></router-view>
+    <router-view :order="order"></router-view>
   </div>
 </template>
 

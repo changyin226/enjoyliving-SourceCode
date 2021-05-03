@@ -219,9 +219,9 @@ export default {
 }
 @media(max-width: 768px){
   .contact-info{
-    a{
-      &:hover{
-        color: #828282 !important;
+    li{
+      a:hover{
+        color: #828282;
       }
     }
   }

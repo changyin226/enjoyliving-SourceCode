@@ -24,17 +24,15 @@
                 </h3>
                 <div class="input-group mx-auto">
                   <div class="input-group-prepend">
-                    <div :class="{disabled: item.qty === 1 }">
-                      <button class="btn"
-                        :class="{disabled: item.qty === 1 }"
-                        type="button"  @click="editCartQty(item, index, -1)">
-                        -
-                      </button>
-                    </div>
+                    <button type="button" class="btn"
+                      :disabled="item.qty === 1"
+                      @click="editCartQty(item, index, -1)">
+                      -
+                    </button>
                   </div>
                   <input type="text" class="form-control text-center" v-model.number="item.qty">
                   <div class="input-group-prepend">
-                    <button class="btn" type="button" @click="editCartQty(item, index, 1)">
+                    <button type="button"  class="btn" @click="editCartQty(item, index, 1)">
                       +
                     </button>
                   </div>
@@ -103,6 +101,7 @@ export default {
             return vm.$http.post(api, { data: item });
           }
           for (let i = 0; i < cartArray.length; i += 1) {
+            // eslint-disable-next-line no-await-in-loop
             await postReq(cartArray[i]);
           }
           this.getCartList();
@@ -178,9 +177,6 @@ export default {
     a:hover{
       text-decoration: none;
     }
-    div.disabled{
-      cursor: not-allowed;
-    }
     button.btn{
       border-radius: 0;
     }
@@ -196,15 +192,10 @@ export default {
 }
 @media(max-width: 768px){
   .cart-page{
-    .cart-info{
-      width: 100% !important;
+    button.btn:hover{
+      color: #00d2ff;
+      background: none;
     }
-    button.btn{
-    &:hover{
-      color: #00d2ff !important;
-      background: none !important;
-    }
-  }
   }
 }
 </style>
