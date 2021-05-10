@@ -25,7 +25,7 @@
                 </div>
                 <div class="form-group">
                   <label for="customFile">或 上傳圖片
-                    <i class="fas fa-spinner fa-spin" v-if="status.fileUploading"></i>
+                    <i class="fa fa-spinner fa-spin fa-fw" v-if="status.fileUploading"></i>
                   </label>
                   <input type="file" id="customFile" class="form-control" name="上傳圖片"
                     @change="uploadFileImg" ref="files">

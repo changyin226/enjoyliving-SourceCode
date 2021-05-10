@@ -26,7 +26,7 @@
 import { Base64 } from 'js-base64';
 import CryptoJS from 'crypto-js';
 
-const key = 'changyin226';
+const key = process.env.VUE_APP_KEY;
 
 export default {
   data() {
@@ -48,6 +48,7 @@ export default {
           const { token, expired } = response.data;
           document.cookie = `hexToken=${token}; expires=${new Date(expired)};`;
           this.storeInfo(this.user.username, this.user.password);
+          this.$bus.$emit('message:push', response.data.message, 'primary');
           this.$router.push('/admin/products/1');
         } else {
           this.isLoading = false;
@@ -114,7 +115,6 @@ export default {
     font-size: 44px;
     text-align: center;
     background: linear-gradient( 135deg,#00d2ff 0%,#00cdac 100%);
-    -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }

@@ -14,7 +14,7 @@
               </li>
               <li class="phone d-flex">
                 <i class="fa fa-phone"></i>
-                <a href="tel://1234567920">+ 1235 2355 98</a>
+                <a href="tel:02-12345678">02-12345678</a>
               </li>
               <li class="email d-flex">
                 <i class="fa fa-envelope" aria-hidden="true"></i>
