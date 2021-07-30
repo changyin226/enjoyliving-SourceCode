@@ -2,10 +2,10 @@
   <div class="front-end-page">
     <Navbar></Navbar>
     <Alert></Alert>
-    <keep-alive v-if="$route.meta.keepAlive">
-      <router-view></router-view>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
-    <router-view v-else></router-view>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
     <Footer></Footer>
   </div>
 </template>

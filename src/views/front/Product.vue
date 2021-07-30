@@ -261,9 +261,9 @@ export default {
 <style lang="scss">
 .product-page{
   .fade-enter-active, .fade-leave-active {
-    transition: all 0.2s;
+    transition: all 0.15s;
   }
-  .fade-enter, .fade-leave-t{
+  .fade-enter, .fade-leave-to{
     opacity: 0;
   }
   .blank{
