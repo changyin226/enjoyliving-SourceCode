@@ -12,10 +12,22 @@
         </div>
         <div class="row justify-content-center pb-5">
           <div class="col-md-8">
-            <form class="d-sm-flex" @submit.prevent>
-              <input type="email" class="form-control mr-sm-3 mb-3 mb-sm-0"
-              name="email" placeholder="Email">
-              <button type="submit" class="btn btn-block">開始訂閱</button>
+            <form
+              class="d-sm-flex"
+              @submit.prevent
+            >
+              <input
+                type="email"
+                class="form-control mr-sm-3 mb-3 mb-sm-0"
+                name="email"
+                placeholder="Email"
+              >
+              <button
+                type="submit"
+                class="btn btn-block"
+              >
+                開始訂閱
+              </button>
             </form>
           </div>
         </div>
@@ -27,23 +39,39 @@
       </span>
       <ul class="d-flex justify-content-center pt-3 icon-list">
         <li class="px-2">
-          <a href="#" target="_blank" @click.prevent>
-            <i class="fa fa-twitter"></i>
+          <a
+            href="#"
+            target="_blank"
+            @click.prevent
+          >
+            <i class="fa fa-twitter" />
           </a>
         </li>
         <li class="px-2">
-          <a href="#" target="_blank" @click.prevent>
-            <i class="fa fa-facebook-official"></i>
+          <a
+            href="#"
+            target="_blank"
+            @click.prevent
+          >
+            <i class="fa fa-facebook-official" />
           </a>
         </li>
         <li class="px-2">
-          <a href="#" target="_blank" @click.prevent>
-            <i class="fa fa-linkedin-square"></i>
+          <a
+            href="#"
+            target="_blank"
+            @click.prevent
+          >
+            <i class="fa fa-linkedin-square" />
           </a>
         </li>
         <li class="px-2">
-          <a href="#" target="_blank" @click.prevent>
-            <i class="fa fa-dribbble"></i>
+          <a
+            href="#"
+            target="_blank"
+            @click.prevent
+          >
+            <i class="fa fa-dribbble" />
           </a>
         </li>
       </ul>

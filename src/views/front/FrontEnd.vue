@@ -1,12 +1,17 @@
 <template>
   <div class="front-end-page">
-    <Navbar></Navbar>
-    <Alert></Alert>
+    <loading
+      :active.sync="isLoading"
+      color="#00d2ff"
+      :lock-scroll="true"
+    />
+    <Navbar />
+    <Alert />
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive"></router-view>
+      <router-view v-if="$route.meta.keepAlive" />
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"></router-view>
-    <Footer></Footer>
+    <router-view v-if="!$route.meta.keepAlive" />
+    <Footer />
   </div>
 </template>
 
@@ -21,10 +26,18 @@ export default {
     Footer,
     Alert,
   },
-  mounted() {
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
+  created() {
     const bodyEl = document.body;
     bodyEl.classList.remove('backend');
     bodyEl.style.lineHeight = 1;
+    this.$bus.$on('update:loading', (isLoading) => {
+      this.isLoading = isLoading;
+    });
   },
 };
 </script>

@@ -1,22 +1,47 @@
 <template>
   <div class="login-page">
-    <loading :active.sync="isLoading" color="#00d2ff" :lock-scroll="true"></loading>
     <h1>EnjoyLiving後台</h1>
     <div class="form-signin">
       <form @submit.prevent="signin">
-        <h2 class="h3 mb-3 font-weight-normal text-center">請先登入</h2>
-        <label for="inputEmail" class="mb-2">Email address</label>
-        <input type="email" id="inputEmail" class="form-control"
-          placeholder="Email address" v-model="user.username">
-        <label for="inputPassword" class="mb-2">Password</label>
-        <input type="password" id="inputPassword" class="form-control"
-          placeholder="Password" v-model="user.password">
+        <h2 class="h3 mb-3 font-weight-normal text-center">
+          請先登入
+        </h2>
+        <label
+          for="inputEmail"
+          class="mb-2"
+        >Email address</label>
+        <input
+          id="inputEmail"
+          v-model="user.username"
+          type="email"
+          class="form-control"
+          placeholder="Email address"
+        >
+        <label
+          for="inputPassword"
+          class="mb-2"
+        >Password</label>
+        <input
+          id="inputPassword"
+          v-model="user.password"
+          type="password"
+          class="form-control"
+          placeholder="Password"
+        >
         <div class="checkbox mb-3">
           <label>
-            <input type="checkbox" v-model="remember"> Remember me
+            <input
+              v-model="remember"
+              type="checkbox"
+            > Remember me
           </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button
+          class="btn btn-lg btn-primary btn-block"
+          type="submit"
+        >
+          Sign in
+        </button>
       </form>
     </div>
   </div>
@@ -36,12 +61,15 @@ export default {
         password: '',
       },
       remember: false,
-      isLoading: false,
     };
+  },
+  created() {
+    this.getCookie();
+    document.body.classList.remove('no-scroll');
   },
   methods: {
     signin() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/admin/signin`;
       this.$http.post(api, this.user).then((response) => {
         if (response.data.success) {
@@ -49,9 +77,9 @@ export default {
           document.cookie = `hexToken=${token}; expires=${new Date(expired)};`;
           this.storeInfo(this.user.username, this.user.password);
           this.$bus.$emit('message:push', response.data.message, 'primary');
-          this.$router.push('/admin/products/1');
+          this.$router.replace('/admin/products/1');
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
@@ -92,10 +120,6 @@ export default {
     clearCookie() {
       this.setCookie('', '', -1);
     },
-  },
-  created() {
-    this.getCookie();
-    document.body.classList.remove('no-scroll');
   },
 };
 </script>

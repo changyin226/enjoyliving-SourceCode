@@ -1,9 +1,13 @@
 <template>
-  <div class="finish-page animate__animated"
-    v-waypoint="{ active: true, callback: onWaypoint }">
+  <div
+    v-waypoint="{ active: true, callback: onWaypoint }"
+    class="finish-page animate__animated"
+  >
     <div class="container">
-      <div class="row justify-content-center mb-5"
-        v-waypoint="{ active: true, callback: onWaypoint }">
+      <div
+        v-waypoint="{ active: true, callback: onWaypoint }"
+        class="row justify-content-center mb-5"
+      >
         <div class="col-md-8 text-center border border-primary rounded py-5">
           <p class="notice mb-5">
             恭喜完成訂單！
@@ -11,7 +15,9 @@
           <table class="table">
             <tbody>
               <tr>
-                <th width="100">訂單編號</th>
+                <th width="100">
+                  訂單編號
+                </th>
                 <td>{{ order.id }}</td>
               </tr>
               <tr>
@@ -38,7 +44,10 @@
                 <th>付款狀態</th>
                 <td>
                   <span v-if="!order.is_paid">尚未付款</span>
-                  <span v-else class="text-success">付款完成</span>
+                  <span
+                    v-else
+                    class="text-success"
+                  >付款完成</span>
                 </td>
               </tr>
             </tbody>
@@ -47,9 +56,24 @@
       </div>
       <div class="row justify-content-center text-center">
         <div class="col-md-4">
-          <router-link :to="`/checkout/${order.id}`" class="btn d-block mb-3">查看訂單細節</router-link>
-          <router-link to="/productlist/all/1" class="btn d-block mb-3">繼續購物</router-link>
-          <router-link to="/" class="btn d-block mb-5">回首頁</router-link>
+          <router-link
+            :to="`/checkout/${order.id}`"
+            class="btn d-block mb-3"
+          >
+            查看訂單細節
+          </router-link>
+          <router-link
+            to="/productlist/all/1"
+            class="btn d-block mb-3"
+          >
+            繼續購物
+          </router-link>
+          <router-link
+            to="/"
+            class="btn d-block mb-5"
+          >
+            回首頁
+          </router-link>
         </div>
       </div>
     </div>
@@ -70,9 +94,6 @@ export default {
         el.classList.add('animate__fadeInUp');
       }
     },
-  },
-  mounted() {
-    document.body.classList.remove('vld-shown');
   },
 };
 </script>

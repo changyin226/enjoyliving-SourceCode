@@ -1,64 +1,117 @@
 <template>
   <div class="product-page">
-    <loading :active.sync="isLoading" color="#00d2ff" :lock-scroll="true"></loading>
-    <div class="banner"></div>
-    <div class="blank" v-if="!product.title"></div>
-    <div class="container mb-5" v-else>
-      <img class="product-page-img" :src="product.imgUrl2" alt="商品圖片" @load="show = true">
-      <div v-if="show">
-        <div class="product-info animate__animated"
+    <div class="banner" />
+    <div
+      v-if="!imgShow"
+      class="blank"
+    />
+    <div
+      class="container mb-5"
+    >
+      <img
+        class="product-page-img"
+        :src="product.imgUrl2"
+        alt="商品圖片"
+        @load="imgShow = true"
+      >
+      <div v-if="imgShow">
+        <div
           :key="`Info:${product.title}`"
-          v-waypoint="{ active: true, callback: onWaypointList }">
+          v-waypoint="{ active: true, callback: onWaypointList }"
+          class="product-info animate__animated"
+        >
           <h2>{{ product.title }}</h2>
           <span>{{ product.description }}</span>
           <del v-if="product.price !== product.origin_price">
             原價 NT {{ product.origin_price | currency }} / {{ product.unit }}
           </del>
           <h3 v-if="product.price === product.origin_price">
-            NT {{ product.origin_price | currency}} / {{ product.unit }}
+            NT {{ product.origin_price | currency }} / {{ product.unit }}
           </h3>
-          <h3 v-else> NT {{ product.price | currency }} / {{ product.unit }} </h3>
+          <h3 v-else>
+            NT {{ product.price | currency }} / {{ product.unit }}
+          </h3>
         </div>
-        <div class="row justify-content-center align-items-center mb-3 animate__animated"
+        <div
           :key="`form:${product.title}`"
-          v-waypoint="{ active: true, callback: onWaypointList }">
+          v-waypoint="{ active: true, callback: onWaypointList }"
+          class="row justify-content-center align-items-center mb-3 animate__animated"
+        >
           <div class="col-md-4 mb-3">
-            <select class="form-control" v-model="product.num">
-              <option :value="num" v-for="num in 10" :key="num">
+            <select
+              v-model="product.num"
+              class="form-control"
+            >
+              <option
+                v-for="num in 10"
+                :key="num"
+                :value="num"
+              >
                 選購 {{ num }} {{ product.unit }}
               </option>
             </select>
           </div>
           <div class="col-md-4 mb-3 d-flex align-items-center">
-            <button type="button" class="btn btn-lg w-100 mr-3 add-cart-btn"
-              @click="addToCart(product.num)">
+            <button
+              type="button"
+              class="btn btn-lg w-100 mr-3 add-cart-btn"
+              @click="addToCart(product.num)"
+            >
               加入購物車
             </button>
-            <button  type="button" class="toogle-favorite">
-              <i class="fa" :class="isFavorite? 'fa-heart': 'fa-heart-o'"
-                @click="toggleFavorite(isFavorite)">
-              </i>
+            <button
+              type="button"
+              class="toogle-favorite"
+            >
+              <i
+                class="fa"
+                :class="isFavorite? 'fa-heart': 'fa-heart-o'"
+                @click="toggleFavorite(isFavorite)"
+              />
             </button>
           </div>
         </div>
         <div class="row justify-content-center">
           <div class="col-md-10 mb-3">
-            <div class="product-detail animate__animated"
+            <div
               :key="`detail:${product.title}`"
-              v-waypoint="{ active: true, callback: onWaypointList }">
+              v-waypoint="{ active: true, callback: onWaypointList }"
+              class="product-detail animate__animated"
+            >
               <ul class="tab-nav">
                 <li :class="{active: tabNav === 'detail'}">
-                  <button type="button" @click="tabNav = 'detail'">產品資訊</button>
+                  <button
+                    type="button"
+                    @click="tabNav = 'detail'"
+                  >
+                    產品資訊
+                  </button>
                 </li>
                 <li :class="{active: tabNav === 'size'}">
-                  <button type="button" @click="tabNav = 'size'">產品尺寸</button>
+                  <button
+                    type="button"
+                    @click="tabNav = 'size'"
+                  >
+                    產品尺寸
+                  </button>
                 </li>
               </ul>
-              <transition name="fade" mode="out-in">
-                <p ref="height" v-if="tabNav === 'detail'" key="detail">
+              <transition
+                name="fade"
+                mode="out-in"
+              >
+                <p
+                  v-if="tabNav === 'detail'"
+                  ref="height"
+                  key="detail"
+                >
                   {{ product.content }}
                 </p>
-                <p v-else key="size" :style="{height: heightRef + 'px'}">
+                <p
+                  v-else
+                  key="size"
+                  :style="{height: heightRef + 'px'}"
+                >
                   {{ product.specification }}
                 </p>
               </transition>
@@ -67,19 +120,39 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid py-5 animate__animated" v-if="similarProducts.length"
-      v-waypoint="{ active: true, callback: onWaypoint }">
+    <div
+      v-if="similarProducts.length"
+      v-waypoint="{ active: true, callback: onWaypoint }"
+      class="container-fluid py-5 animate__animated"
+    >
       <div class="container pt-0">
         <h2 class="text-center py-5">
           其他相似商品
         </h2>
-        <swiper class="swiper" :options="swiperOptions">
-          <swiper-slide v-for="item in similarProducts" :key="item.id">
-            <ProductCard :product="item" @change-isLoading="isLoading = $event"></ProductCard>
+        <swiper
+          class="swiper"
+          :options="swiperOptions"
+        >
+          <swiper-slide
+            v-for="item in similarProducts"
+            :key="item.id"
+          >
+            <ProductCard
+              :product="item"
+            />
           </swiper-slide>
-          <div class="swiper-button-next" slot="button-next"></div>
-          <div class="swiper-button-prev" slot="button-prev"></div>
-          <div class="swiper-pagination" slot="pagination"></div>
+          <div
+            slot="button-next"
+            class="swiper-button-next"
+          />
+          <div
+            slot="button-prev"
+            class="swiper-button-prev"
+          />
+          <div
+            slot="pagination"
+            class="swiper-pagination"
+          />
         </swiper>
       </div>
     </div>
@@ -92,6 +165,11 @@ import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
 
 export default {
+  components: {
+    ProductCard,
+    Swiper,
+    SwiperSlide,
+  },
   data() {
     return {
       id: '',
@@ -131,8 +209,7 @@ export default {
         observer: true,
         observeParents: true,
       },
-      isLoading: false,
-      show: false,
+      imgShow: false,
     };
   },
   computed: {
@@ -145,18 +222,24 @@ export default {
       return false;
     },
   },
+  mounted() {
+    this.favoriteProducts = JSON.parse(localStorage.getItem('favoriteProducts')) || [];
+    this.id = this.$route.params.id;
+    this.getProduct();
+    this.$bus.$emit('hideOffCanvas');
+  },
   methods: {
     getProduct() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/product/${this.id}`;
       this.$http.get(api).then((response) => {
         if (response.data.success) {
           this.product = response.data.product;
           this.product.num = 1;
           this.getSimilarProducts();
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$router.push('/productlist/all/1');
           this.$bus.$emit('message:push', response.data.message);
         }
@@ -176,7 +259,7 @@ export default {
       });
     },
     addToCart(qty) {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const cartArray = JSON.parse(localStorage.getItem('cartProducts')) || [];
       const cacheId = cartArray.map((product) => product.product_id);
       if (cacheId.includes(this.product.id)) {
@@ -203,7 +286,7 @@ export default {
       this.$bus.$emit('update:cartNum');
       this.$bus.$emit('message:push', '已加入購物車', 'primary');
       setTimeout(() => {
-        this.isLoading = false;
+        this.$bus.$emit('update:loading', false);
       }, 500);
     },
     toggleFavorite(isFavorite) {
@@ -236,17 +319,6 @@ export default {
       }
     },
   },
-  components: {
-    ProductCard,
-    Swiper,
-    SwiperSlide,
-  },
-  mounted() {
-    this.favoriteProducts = JSON.parse(localStorage.getItem('favoriteProducts')) || [];
-    this.id = this.$route.params.id;
-    this.getProduct();
-    this.$bus.$emit('hideOffCanvas');
-  },
   beforeRouteUpdate(to, from, next) {
     this.id = to.params.id;
     this.similarProducts = [];
@@ -265,9 +337,6 @@ export default {
   }
   .fade-enter, .fade-leave-to{
     opacity: 0;
-  }
-  .blank{
-    height: 1000px;
   }
   .banner{
     background: url('../../assets/images/ProductPageBanner.jpg') center;

@@ -1,13 +1,20 @@
 <template>
-  <div class="modal fade" id="orderModal">
+  <div
+    id="orderModal"
+    class="modal fade"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
-          <h6 class="text-center py-3">購買日期： {{ order.create_at | timestamp }}</h6>
+          <h6 class="text-center py-3">
+            購買日期： {{ order.create_at | timestamp }}
+          </h6>
           <table class="table text-white">
             <tbody>
               <tr>
-                <th width="100">訂單編號：</th>
+                <th width="100">
+                  訂單編號：
+                </th>
                 <td>{{ order.id }}</td>
               </tr>
               <tr>
@@ -34,7 +41,10 @@
                 <th>付款狀態：</th>
                 <td>
                   <span v-if="!order.is_paid">尚未付款</span>
-                  <span v-else class="text-success">付款完成</span>
+                  <span
+                    v-else
+                    class="text-success"
+                  >付款完成</span>
                 </td>
               </tr>
             </tbody>

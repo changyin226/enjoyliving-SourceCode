@@ -1,30 +1,50 @@
 <template>
-  <div class="navbar-component" :class="{'off-canvas-navbar-component': isOffCanvas}">
+  <div
+    class="navbar-component"
+    :class="{'off-canvas-navbar-component': isOffCanvas}"
+  >
     <transition name="transform">
-      <ul class="off-canvas p-5" v-show="isOffCanvas">
-        <button type="button" class="close-toggle" @click="toggleOffCanvas">
-          <i class="fa fa-times"></i>
+      <ul
+        v-show="isOffCanvas"
+        class="off-canvas p-5"
+      >
+        <button
+          type="button"
+          class="close-toggle"
+          @click="toggleOffCanvas"
+        >
+          <i class="fa fa-times" />
         </button>
         <li>
-          <router-link to="/productlist/all/1">產品</router-link>
+          <router-link to="/productlist/all/1">
+            產品
+          </router-link>
         </li>
         <li>
-          <router-link to="/favorites/1">喜好項目</router-link>
+          <router-link to="/favorites/1">
+            喜好項目
+          </router-link>
         </li>
         <li>
-          <router-link to="/about">關於我們</router-link>
+          <router-link to="/about">
+            關於我們
+          </router-link>
         </li>
         <li>
-          <router-link to="/contact">聯絡我們</router-link>
+          <router-link to="/contact">
+            聯絡我們
+          </router-link>
         </li>
         <li>
-          <router-link to="/login">後台登入</router-link>
+          <router-link to="/login">
+            後台管理
+          </router-link>
         </li>
         <li>
           <router-link to="/cart">
             <span>
               <small v-if="cartsNum">{{ cartsNum }}</small>
-              <i class="fa fa-shopping-cart"></i>
+              <i class="fa fa-shopping-cart" />
             </span>
           </router-link>
         </li>
@@ -32,41 +52,62 @@
     </transition>
     <nav class="nav-bar">
       <div class="container py-4">
-        <button type="button" class="nav-toggle" @click.stop="toggleOffCanvas(true)">
-          <i class="fa fa-bars"></i>
+        <button
+          type="button"
+          class="nav-toggle"
+          @click.stop="toggleOffCanvas(true)"
+        >
+          <i class="fa fa-bars" />
         </button>
         <div class="row">
           <div class="col-2">
             <router-link to="/">
-              <img src="../../assets/images/Logo.png" alt="公司Logo">
+              <img
+                src="../../assets/images/Logo.png"
+                alt="公司Logo"
+              >
             </router-link>
           </div>
           <div class="col-8 menu">
             <ul class="d-flex justify-content-center align-items-center">
               <li class="mx-3">
-                <router-link to="/productlist/all/1">產品</router-link>
+                <router-link to="/productlist/all/1">
+                  產品
+                </router-link>
               </li>
               <li class="mx-3">
-                <router-link to="/about">關於我們</router-link>
+                <router-link to="/about">
+                  關於我們
+                </router-link>
               </li>
               <li class="mx-3">
-                <router-link to="/contact">聯絡我們</router-link>
+                <router-link to="/contact">
+                  聯絡我們
+                </router-link>
               </li>
               <li class="mx-3">
-                <router-link to="/login">後台登入</router-link>
+                <router-link to="/login">
+                  後台管理
+                </router-link>
               </li>
             </ul>
           </div>
           <div class="col-2 ml-auto cart">
-            <router-link to="/favorites/1" title="查看喜好項目">
+            <router-link
+              to="/favorites/1"
+              title="查看喜好項目"
+            >
               <span>
-                <i class="fa fa-heart-o mr-3"></i>
+                <i class="fa fa-heart-o mr-3" />
               </span>
             </router-link>
-            <router-link to="/cart" title="查看購物車">
+            <router-link
+              to="/cart"
+              title="查看購物車"
+            >
               <span>
                 <small v-if="cartsNum">{{ cartsNum }}</small>
-                <i class="fa fa-shopping-cart"></i>
+                <i class="fa fa-shopping-cart" />
               </span>
             </router-link>
           </div>
@@ -83,6 +124,11 @@ export default {
       isOffCanvas: false,
       cartsNum: 0,
     };
+  },
+  mounted() {
+    this.$bus.$on('update:cartNum', this.getCartsNumber);
+    this.$bus.$on('hideOffCanvas', this.toggleOffCanvas);
+    this.getCartsNumber();
   },
   methods: {
     getCartsNumber() {
@@ -107,11 +153,6 @@ export default {
         this.toggleOffCanvas();
       }
     },
-  },
-  mounted() {
-    this.$bus.$on('update:cartNum', this.getCartsNumber);
-    this.$bus.$on('hideOffCanvas', this.toggleOffCanvas);
-    this.getCartsNumber();
   },
 };
 </script>

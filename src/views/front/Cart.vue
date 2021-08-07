@@ -1,21 +1,40 @@
 <template>
   <div class="cart-page">
-    <loading :active.sync="isLoading" color="#00d2ff" :lock-scroll="true"></loading>
-    <div class="banner"></div>
+    <div class="banner" />
     <div class="container py-5">
-      <h2 class="py-5 text-center">購物車列表</h2>
-      <div class="row justify-content-center text-center animate__animated"
+      <h2 class="py-5 text-center">
+        購物車列表
+      </h2>
+      <div
+        v-if="!loadingSuccess"
+        class="blank"
+      />
+      <div
         v-if="cart.length"
-        v-waypoint="{ active: true, callback: onWaypoint }">
+        v-waypoint="{ active: true, callback: onWaypoint }"
+        class="row justify-content-center text-center animate__animated"
+      >
         <div class="col-md-10">
-          <div class="cart-list d-flex align-items-center py-3
-            border-primary border-bottom border-top" v-for="(item, index) in cart" :key="item.id">
+          <div
+            v-for="(item, index) in cart"
+            :key="item.id"
+            class="cart-list d-flex align-items-center py-3
+            border-primary border-bottom border-top"
+          >
             <div class="cart-info d-flex align-items-center">
-              <button type="button" class="btn btn-outline-primary btn-sm mr-3 mr-md-5"
-                @click="removeCartItem(item.id, index)">
-                <i class="fa fa-trash-o"></i>
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm mr-3 mr-md-5"
+                @click="removeCartItem(item.id, index)"
+              >
+                <i class="fa fa-trash-o" />
               </button>
-              <img :src="item.product.imgUrl2" alt="商品圖片" width="25%" class="mr-3 mr-md-5">
+              <img
+                :src="item.product.imgUrl2"
+                alt="商品圖片"
+                width="25%"
+                class="mr-3 mr-md-5"
+              >
               <div class="d-md-flex flex-fill align-items-center">
                 <h3 class="mb-3 mb-md-0">
                   <router-link :to="`/product/${item.product.id}`">
@@ -24,15 +43,26 @@
                 </h3>
                 <div class="input-group mx-auto">
                   <div class="input-group-prepend">
-                    <button type="button" class="btn"
+                    <button
+                      type="button"
+                      class="btn"
                       :disabled="item.qty === 1"
-                      @click="editCartQty(item, index, -1)">
+                      @click="editCartQty(item, index, -1)"
+                    >
                       -
                     </button>
                   </div>
-                  <input type="text" class="form-control text-center" v-model.number="item.qty">
+                  <input
+                    v-model.number="item.qty"
+                    type="text"
+                    class="form-control text-center"
+                  >
                   <div class="input-group-prepend">
-                    <button type="button"  class="btn" @click="editCartQty(item, index, 1)">
+                    <button
+                      type="button"
+                      class="btn"
+                      @click="editCartQty(item, index, 1)"
+                    >
                       +
                     </button>
                   </div>
@@ -43,16 +73,25 @@
               {{ item.product.price * item.qty | currency }}
             </p>
           </div>
-          <router-link to="/productlist/all/1"
-            class="btn btn-lg my-5 mx-1">
+          <router-link
+            to="/productlist/all/1"
+            class="btn btn-lg my-5 mx-1"
+          >
             繼續購物
           </router-link>
-          <router-link to="/checkout" class="btn btn-lg my-5 mx-1">去買單</router-link>
+          <router-link
+            to="/checkout"
+            class="btn btn-lg my-5 mx-1"
+          >
+            去買單
+          </router-link>
         </div>
       </div>
-      <div class="row justify-content-center py-5 animate__animated"
+      <div
         v-if="loadingSuccess && !cart.length"
-        v-waypoint="{ active: true, callback: onWaypoint }">
+        v-waypoint="{ active: true, callback: onWaypoint }"
+        class="row justify-content-center py-5 animate__animated"
+      >
         <div class="col-md-6 text-center border border-primary rounded py-5">
           <p class="notice mb-4">
             目前購物車是空的
@@ -60,7 +99,12 @@
             快去產品頁逛逛吧
             <br>
           </p>
-          <router-link to="/productlist/all/1" class="btn">SHOP</router-link>
+          <router-link
+            to="/productlist/all/1"
+            class="btn"
+          >
+            SHOP
+          </router-link>
         </div>
       </div>
     </div>
@@ -73,12 +117,15 @@ export default {
     return {
       cart: [],
       loadingSuccess: false,
-      isLoading: false,
     };
+  },
+  mounted() {
+    this.postCartList();
+    this.$bus.$emit('hideOffCanvas');
   },
   methods: {
     postCartList() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const cacheID = [];
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
       this.$http.get(api)
@@ -112,10 +159,10 @@ export default {
       this.$http.get(api).then((response) => {
         if (response.data.success) {
           this.cart = response.data.data.carts;
-          this.isLoading = false;
           this.loadingSuccess = true;
+          this.$bus.$emit('update:loading', false);
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$router.push('/');
           this.$bus.$emit('message:push', response.data.messages);
         }
@@ -129,7 +176,7 @@ export default {
       localStorage.setItem('cartProducts', JSON.stringify(cartArray));
     },
     removeCartItem(id, index) {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart/${id}`;
       this.$http.delete(api).then((response) => {
         if (response.data.success) {
@@ -140,7 +187,7 @@ export default {
           this.$bus.$emit('update:cartNum');
           this.$bus.$emit('message:push', response.data.message, 'primary');
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
@@ -150,10 +197,6 @@ export default {
         el.classList.add('animate__fadeInUp');
       }
     },
-  },
-  mounted() {
-    this.postCartList();
-    this.$bus.$emit('hideOffCanvas');
   },
 };
 </script>

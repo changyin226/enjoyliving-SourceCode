@@ -1,54 +1,95 @@
 <template>
   <div class="coupons-page">
-    <loading :active.sync="isLoading" color="#00d2ff" :lock-scroll="true"></loading>
     <div class="text-right">
-      <button type="button" class="btn btn-primary mt-4 text-white"
-        @click="openModal(true)">
+      <button
+        type="button"
+        class="btn btn-primary mt-4 text-white"
+        @click="openModal(true)"
+      >
         建立新的優惠卷
       </button>
     </div>
-    <table class="table mt-4" v-if="coupons.length">
+    <table
+      v-if="coupons.length"
+      class="table mt-4"
+    >
       <thead>
         <tr class="text-white text-center">
           <th>名稱</th>
           <th>折扣</th>
           <th>到期日</th>
-          <th class="d-none d-sm-table-cell">是否啟用</th>
+          <th class="d-none d-sm-table-cell">
+            是否啟用
+          </th>
           <th>編輯</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="text-white text-center" v-for="coupon in coupons" :key="coupon.id">
-          <td class="align-middle">{{ coupon.title }}</td>
-          <td class="align-middle">{{ coupon.percent }}%</td>
-          <td class="align-middle">{{ coupon.due_date | timestamp }}</td>
-          <td class="align-middle d-none d-sm-table-cell">
-            <span v-if="coupon.is_enabled" class="text-success">啟用</span>
-            <span v-else class="text-danger">未啟用</span>
+        <tr
+          v-for="coupon in coupons"
+          :key="coupon.id"
+          class="text-white text-center"
+        >
+          <td class="align-middle">
+            {{ coupon.title }}
           </td>
           <td class="align-middle">
-            <button type="button" class="btn btn-outline-primary btn-sm mx-auto mx-sm-1"
-              @click="openModal(false, coupon)">
+            {{ coupon.percent }}%
+          </td>
+          <td class="align-middle">
+            {{ coupon.due_date | timestamp }}
+          </td>
+          <td class="align-middle d-none d-sm-table-cell">
+            <span
+              v-if="coupon.is_enabled"
+              class="text-success"
+            >啟用</span>
+            <span
+              v-else
+              class="text-danger"
+            >未啟用</span>
+          </td>
+          <td class="align-middle">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm mx-auto mx-sm-1"
+              @click="openModal(false, coupon)"
+            >
               編輯
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm mx-auto mx-sm-1"
-              @click="deleteModal(coupon)">
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm mx-auto mx-sm-1"
+              @click="deleteModal(coupon)"
+            >
               刪除
             </button>
           </td>
         </tr>
       </tbody>
     </table>
-    <div class="text-center border border-primary rounded mt-5 py-5 mx-auto"
-      v-if="loadingSuccess && !coupons.length">
+    <div
+      v-if="loadingSuccess && !coupons.length"
+      class="text-center border border-primary rounded mt-5 py-5 mx-auto"
+    >
       <p class="notice mb-0 py-5">
         沒有已建立的優惠卷
       </p>
     </div>
-    <Pagination v-if="coupons.length" :pagination="pagination" class="my-5"></Pagination>
-    <CouponModal :modalTitle="modalTitle" :tempCoupon="tempCoupon"
-      @update-coupon="updateCoupon"></CouponModal>
-    <DelCouponModal :tempCoupon="tempCoupon" @delete-coupon="deleteCoupon"></DelCouponModal>
+    <Pagination
+      v-if="coupons.length"
+      :pagination="pagination"
+      class="my-5"
+    />
+    <CouponModal
+      :modal-title="modalTitle"
+      :temp-coupon="tempCoupon"
+      @update-coupon="updateCoupon"
+    />
+    <DelCouponModal
+      :temp-coupon="tempCoupon"
+      @delete-coupon="deleteCoupon"
+    />
   </div>
 </template>
 
@@ -59,6 +100,11 @@ import CouponModal from '@/components/back/CouponModal.vue';
 import DelCouponModal from '@/components/back/DelCouponModal.vue';
 
 export default {
+  components: {
+    Pagination,
+    CouponModal,
+    DelCouponModal,
+  },
   data() {
     return {
       coupons: [],
@@ -68,17 +114,16 @@ export default {
       modalTitle: '',
       currentPage: '',
       loadingSuccess: false,
-      isLoading: false,
     };
   },
-  components: {
-    Pagination,
-    CouponModal,
-    DelCouponModal,
+  mounted() {
+    this.currentPage = this.$route.params.page;
+    this.getCoupons(this.currentPage);
+    this.$bus.$emit('update:routerActive');
   },
   methods: {
     getCoupons(page = 1) {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       this.loadingSuccess = false;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupons?page=${page}`;
       this.$http.get(api).then((response) => {
@@ -89,10 +134,10 @@ export default {
             this.$router.push({ params: { page: this.pagination.total_pages } });
           } else {
             this.loadingSuccess = true;
-            this.isLoading = false;
+            this.$bus.$emit('update:loading', false);
           }
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
@@ -114,7 +159,7 @@ export default {
       $('#delCouponModal').modal('show');
     },
     updateCoupon() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupon`;
       let httpMethod = 'post';
       if (!this.isNew) {
@@ -127,13 +172,13 @@ export default {
           this.getCoupons(this.currentPage);
         } else {
           $('#couponModal').modal('hide');
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
     },
     deleteCoupon() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/coupon/${this.tempCoupon.id}`;
       this.$http.delete(api).then((response) => {
         if (response.data.success) {
@@ -141,16 +186,11 @@ export default {
           this.getCoupons(this.currentPage);
         } else {
           $('#delCouponModal').modal('hide');
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
     },
-  },
-  mounted() {
-    this.currentPage = this.$route.params.page;
-    this.getCoupons(this.currentPage);
-    this.$bus.$emit('update:routerActive');
   },
   beforeRouteUpdate(to, from, next) {
     this.currentPage = to.params.page;

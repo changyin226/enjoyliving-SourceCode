@@ -1,54 +1,105 @@
 <template>
-  <div class="modal fade" id="couponModal">
+  <div
+    id="couponModal"
+    class="modal fade"
+  >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">{{ modalTitle }}</h5>
-          <button type="button" class="close" data-dismiss="modal">
+          <h5
+            id="exampleModalLabel"
+            class="modal-title"
+          >
+            {{ modalTitle }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+          >
             <span class="text-white">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label for="title">標題</label>
-            <input type="text" class="form-control" id="title" name="標題"
-            v-model="tempCoupon.title"
-            placeholder="請輸入標題">
+            <input
+              id="title"
+              v-model="tempCoupon.title"
+              type="text"
+              class="form-control"
+              name="標題"
+              placeholder="請輸入標題"
+            >
           </div>
           <div class="form-group">
             <label for="code">優惠碼</label>
-            <input type="text" class="form-control" id="code" name="優惠卷"
-            v-model="tempCoupon.code"
-            placeholder="請輸入優惠碼">
+            <input
+              id="code"
+              v-model="tempCoupon.code"
+              type="text"
+              class="form-control"
+              name="優惠卷"
+              placeholder="請輸入優惠碼"
+            >
           </div>
           <div class="form-group">
             <label for="due_date">到期日</label>
-            <input type="date" class="form-control" id="due_date" name="到期日"
+            <input
+              id="due_date"
               v-model="due_date"
-              placeholder="請輸入到期日">
+              type="date"
+              class="form-control"
+              name="到期日"
+              placeholder="請輸入到期日"
+            >
           </div>
           <div class="form-group">
             <label for="percent">折扣百分比</label>
-            <input type="text" class="form-control" id="percent" name="折扣"
-            v-model="tempCoupon.percent"
-            placeholder="請輸入折扣百分比">
+            <input
+              id="percent"
+              v-model="tempCoupon.percent"
+              type="text"
+              class="form-control"
+              name="折扣"
+              placeholder="請輸入折扣百分比"
+            >
           </div>
           <div class="form-group">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="啟用"
+              <input
+                id="is_enabled"
                 v-model="tempCoupon.is_enabled"
+                class="form-check-input"
+                type="checkbox"
+                name="啟用"
                 :true-value="1"
                 :false-value="0"
-                id="is_enabled">
-              <label class="form-check-label" for="is_enabled">
+              >
+              <label
+                class="form-check-label"
+                for="is_enabled"
+              >
                 是否啟用
               </label>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary text-white" @click="updateCoupon">確定</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal"
+          >
+            取消
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary text-white"
+            @click="updateCoupon"
+          >
+            確定
+          </button>
         </div>
       </div>
     </div>

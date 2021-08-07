@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import axios from 'axios';
 
 Vue.use(Router);
 
@@ -7,70 +8,70 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: () => import('@/views/front/FrontEnd.vue'),
+      component: () => import(/* webpackChunkName: "FrontEnd" */ '@/views/front/FrontEnd.vue'),
       children: [
         {
           path: '',
           name: 'Home',
-          component: () => import('@/views/front/Home.vue'),
+          component: () => import(/* webpackChunkName: "FrontEnd" */ '@/views/front/Home.vue'),
           meta: {
             keepAlive: true,
           },
         },
         {
-          path: '/productlist/:category/:page(\\d+)',
+          path: 'productlist/:category/:page(\\d+)',
           name: 'ProductList',
-          component: () => import('@/views/front/ProductList.vue'),
+          component: () => import(/* webpackChunkName: "FrontEnd" */ '@/views/front/ProductList.vue'),
           meta: {
             keepAlive: true,
           },
         },
         {
-          path: '/product/:id',
+          path: 'product/:id',
           name: 'Product',
-          component: () => import('@/views/front/Product.vue'),
+          component: () => import(/* webpackChunkName: "FrontEnd" */ '@/views/front/Product.vue'),
         },
         {
-          path: '/favorites/:page(\\d+)',
+          path: 'favorites/:page(\\d+)',
           name: 'Favorites',
-          component: () => import('@/views/front/Favorites.vue'),
+          component: () => import(/* webpackChunkName: "FrontEnd" */ '@/views/front/Favorites.vue'),
           meta: {
             keepAlive: true,
           },
         },
         {
-          path: '/about',
+          path: 'about',
           name: 'About',
-          component: () => import('@/views/front/About.vue'),
+          component: () => import(/* webpackChunkName: "FrontEnd" */ '@/views/front/About.vue'),
         },
         {
-          path: '/contact',
+          path: 'contact',
           name: 'Contact',
-          component: () => import('@/views/front/Contact.vue'),
+          component: () => import(/* webpackChunkName: "FrontEnd" */ '@/views/front/Contact.vue'),
         },
         {
-          path: '/cart',
+          path: 'cart',
           name: 'Cart',
-          component: () => import('@/views/front/Cart.vue'),
+          component: () => import(/* webpackChunkName: "FrontEnd" */ '@/views/front/Cart.vue'),
         },
         {
-          path: '/checkout',
-          component: () => import('@/views/front/CheckOut.vue'),
+          path: 'checkout',
+          component: () => import(/* webpackChunkName: "FrontEnd-CheckOut" */ '@/views/front/CheckOut.vue'),
           children: [
             {
               path: '',
               name: 'CheckOrder',
-              component: () => import('@/views/front/CheckOrder.vue'),
+              component: () => import(/* webpackChunkName: "FrontEnd-CheckOut" */ '@/views/front/CheckOrder.vue'),
             },
             {
               path: ':order_id',
               name: 'Order',
-              component: () => import('@/views/front/Order.vue'),
+              component: () => import(/* webpackChunkName: "FrontEnd-CheckOut" */ '@/views/front/Order.vue'),
               children: [
                 {
                   path: 'finish',
                   name: 'Finish',
-                  component: () => import('@/views/front/Finish.vue'),
+                  component: () => import(/* webpackChunkName: "FrontEnd-CheckOut" */ '@/views/front/Finish.vue'),
                 },
               ],
             },
@@ -80,43 +81,41 @@ export default new Router({
     },
     {
       path: '/login',
-      component: () => import('@/views/back/BackEnd.vue'),
+      component: () => import(/* webpackChunkName: "BackEnd" */ '@/views/back/BackEnd.vue'),
       children: [
         {
           path: '',
           name: 'Login',
-          component: () => import('@/views/back/Login.vue'),
+          component: () => import(/* webpackChunkName: "BackEnd" */ '@/views/back/Login.vue'),
         },
         {
           path: '/admin',
           name: 'Dashboard',
-          component: () => import('@/views/back/Dashboard.vue'),
+          component: () => import(/* webpackChunkName: "BackEnd-Dashboard" */ '@/views/back/Dashboard.vue'),
           children: [
             {
               path: 'products/:page(\\d+)',
               name: 'Products',
-              component: () => import('@/views/back/Products.vue'),
-              meta: {
-                requiresAuth: true,
-              },
+              component: () => import(/* webpackChunkName: "BackEnd-Dashboard" */ '@/views/back/Products.vue'),
             },
             {
               path: 'orders/:page(\\d+)',
               name: 'Orders',
-              component: () => import('@/views/back/Orders.vue'),
-              meta: {
-                requiresAuth: true,
-              },
+              component: () => import(/* webpackChunkName: "BackEnd-Dashboard" */ '@/views/back/Orders.vue'),
             },
             {
               path: 'coupons/:page(\\d+)',
               name: 'Coupons',
-              component: () => import('@/views/back/Coupons.vue'),
-              meta: {
-                requiresAuth: true,
-              },
+              component: () => import(/* webpackChunkName: "BackEnd-Dashboard" */ '@/views/back/Coupons.vue'),
             },
           ],
+          beforeEnter: (to, from, next) => {
+            const api = `${process.env.VUE_APP_APIPATH}/api/user/check`;
+            axios.post(api).then((response) => {
+              if (response.data.success) next();
+              else next({ path: '/login' });
+            });
+          },
         },
       ],
     },

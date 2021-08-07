@@ -1,7 +1,6 @@
 <template>
   <div class="favorites-page">
-    <loading :active.sync="isLoading" color="#00d2ff" :lock-scroll="true"></loading>
-    <div class="banner"></div>
+    <div class="banner" />
     <div class="container py-5">
       <div class="row justify-content-center py-5">
         <div class="col-md-8">
@@ -12,24 +11,46 @@
           </div>
         </div>
       </div>
+      <div
+        v-if="!loadingSuccess"
+        class="blank"
+      />
       <div class="row">
-        <div class="col-md-4"
-          v-for="(product, i) in perPageProducts[currentPage - 1]" :key="product.id">
-          <button type="button" class="delete-favorite" @click="delFavorite(i)" title="移除喜好項目">
-            <i class="fa fa-heart"></i>
+        <div
+          v-for="(product, i) in perPageProducts[currentPage - 1]"
+          :key="product.id"
+          class="col-md-4"
+        >
+          <button
+            type="button"
+            class="delete-favorite"
+            title="移除喜好項目"
+            @click="delFavorite(i)"
+          >
+            <i class="fa fa-heart" />
           </button>
-          <ProductCard :product="product" @change-isLoading="isLoading = $event"></ProductCard>
+          <ProductCard
+            :product="product"
+          />
         </div>
       </div>
-      <div class="row py-5" v-if="favoriteProducts.length" :key="currentPage">
+      <div
+        v-if="favoriteProducts.length"
+        :key="currentPage"
+        class="row py-5"
+      >
         <div class="col">
-          <Pagination :current-page="currentPage" :total-page="perPageProducts.length">
-          </Pagination>
+          <Pagination
+            :current-page="currentPage"
+            :total-page="perPageProducts.length"
+          />
         </div>
       </div>
-      <div class="row justify-content-center py-5 animate__animated"
+      <div
         v-if="loadingSuccess && !favoriteProducts.length"
-        v-waypoint="{ active: true, callback: onWaypoint }">
+        v-waypoint="{ active: true, callback: onWaypoint }"
+        class="row justify-content-center py-5 animate__animated"
+      >
         <div class="col-md-6 text-center border border-primary rounded py-5">
           <p class="notice mb-4">
             目前沒有追蹤的產品
@@ -37,7 +58,12 @@
             快去產品頁逛逛吧
             <br>
           </p>
-          <router-link to="/productlist/all/1" class="btn">SHOP</router-link>
+          <router-link
+            to="/productlist/all/1"
+            class="btn"
+          >
+            SHOP
+          </router-link>
         </div>
       </div>
     </div>
@@ -49,12 +75,15 @@ import ProductCard from '@/components/front/ProductCard.vue';
 import Pagination from '@/components/front/Pagination.vue';
 
 export default {
+  components: {
+    ProductCard,
+    Pagination,
+  },
   data() {
     return {
       favoriteProducts: [],
       favoriteTitles: [],
       currentPage: 0,
-      isLoading: false,
       loadingSuccess: false,
     };
   },
@@ -71,9 +100,20 @@ export default {
       return newProducts;
     },
   },
+  activated() {
+    this.currentPage = parseInt(this.$route.params.page, 10);
+    this.favoriteTitles = JSON.parse(localStorage.getItem('favoriteProducts')) || [];
+    if (this.favoriteProducts.length !== this.favoriteTitles.length) {
+      this.loadingSuccess = false;
+      this.getProduct();
+    } else {
+      this.loadingSuccess = true;
+    }
+    this.$bus.$emit('hideOffCanvas');
+  },
   methods: {
     getProduct() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`;
       this.$http.get(api).then((response) => {
         if (response.data.success) {
@@ -83,9 +123,9 @@ export default {
             this.$router.push({ params: { page: this.currentPage - 1 } });
           }
           this.loadingSuccess = true;
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$router.push('/');
           this.$bus.$emit('message:push', response.data.messages);
         }
@@ -102,25 +142,10 @@ export default {
       localStorage.setItem('favoriteProducts', JSON.stringify(this.favoriteTitles));
     },
   },
-  components: {
-    ProductCard,
-    Pagination,
-  },
   beforeRouteUpdate(to, from, next) {
     this.currentPage = parseInt(to.params.page, 10);
     this.$bus.$emit('hideOffCanvas');
     next();
-  },
-  activated() {
-    this.currentPage = parseInt(this.$route.params.page, 10);
-    this.favoriteTitles = JSON.parse(localStorage.getItem('favoriteProducts')) || [];
-    if (this.favoriteProducts.length !== this.favoriteTitles.length) {
-      this.loadingSuccess = false;
-      this.getProduct();
-    } else {
-      this.loadingSuccess = true;
-    }
-    this.$bus.$emit('hideOffCanvas');
   },
 };
 </script>

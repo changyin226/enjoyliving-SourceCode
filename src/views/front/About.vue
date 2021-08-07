@@ -1,9 +1,11 @@
 <template>
   <div class="about-page">
-    <div class="banner"></div>
+    <div class="banner" />
     <div class="container py-5">
-      <div class="row py-5 about-info animate__animated"
-        v-waypoint="{ active: true, callback: onWaypoint }">
+      <div
+        v-waypoint="{ active: true, callback: onWaypoint }"
+        class="row py-5 about-info animate__animated"
+      >
         <div class="col-md-6">
           <div class="desc mb-5">
             <h3>公司歷史</h3>
@@ -28,13 +30,18 @@
           </div>
         </div>
         <div class="col-md-6">
-          <img class="mb-5" src="@/assets/images/AboutImg.jpg" alt="公司圖片">
+          <img
+            class="mb-5"
+            src="@/assets/images/AboutImg.jpg"
+            alt="公司圖片"
+          >
         </div>
       </div>
       <div class="row justify-content-center py-5">
         <div class="col-md-8">
-          <div class="section-heading animate__animated"
-            v-waypoint="{ active: true, callback: onWaypoint }">
+          <div
+            class="section-heading"
+          >
             <span>Enjoy Living Staff</span>
             <h2>公司團隊</h2>
             <p>
@@ -45,9 +52,14 @@
       </div>
       <div class="row">
         <div class="col-md-4 text-center py-5">
-          <div class="staff animate__animated"
-            v-waypoint="{ active: true, callback: onWaypointList }">
-            <img src="https://randomuser.me/api/portraits/lego/8.jpg" alt="員工照片">
+          <div
+            v-waypoint="{ active: true, callback: onWaypointList }"
+            class="staff animate__animated"
+          >
+            <img
+              src="https://randomuser.me/api/portraits/lego/8.jpg"
+              alt="員工照片"
+            >
             <h3>Jean Smith</h3>
             <span>Chief Executive Officer</span>
             <p>
@@ -56,20 +68,30 @@
           </div>
         </div>
         <div class="col-md-4 text-center py-5">
-          <div class="staff animate__animated"
-            v-waypoint="{ active: true, callback: onWaypointList }">
-            <img src="https://randomuser.me/api/portraits/lego/2.jpg" alt="員工照片">
+          <div
+            v-waypoint="{ active: true, callback: onWaypointList }"
+            class="staff animate__animated"
+          >
+            <img
+              src="https://randomuser.me/api/portraits/lego/2.jpg"
+              alt="員工照片"
+            >
             <h3>Hush Raven</h3>
             <span>Co-Owner</span>
             <p>
-            作為眾多工作職責的一部分，負責人力資源管理，並負責招募在此工作的所有傑出人才，樹立公司文化並使其成為一個理想的工作場所。
+              作為眾多工作職責的一部分，負責人力資源管理，並負責招募在此工作的所有傑出人才，樹立公司文化並使其成為一個理想的工作場所。
             </p>
           </div>
         </div>
         <div class="col-md-4 text-center py-5">
-          <div class="staff animate__animated"
-            v-waypoint="{ active: true, callback: onWaypointList }">
-            <img src="https://randomuser.me/api/portraits/lego/0.jpg" alt="員工照片">
+          <div
+            v-waypoint="{ active: true, callback: onWaypointList }"
+            class="staff animate__animated"
+          >
+            <img
+              src="https://randomuser.me/api/portraits/lego/0.jpg"
+              alt="員工照片"
+            >
             <h3>Alex King</h3>
             <span>Co-Owner</span>
             <p>
@@ -84,6 +106,9 @@
 
 <script>
 export default {
+  mounted() {
+    this.$bus.$emit('hideOffCanvas');
+  },
   methods: {
     onWaypoint({ el, going }) {
       if (going === this.$waypointMap.GOING_IN) {
@@ -100,9 +125,6 @@ export default {
         }, index * 200);
       }
     },
-  },
-  mounted() {
-    this.$bus.$emit('hideOffCanvas');
   },
 };
 </script>

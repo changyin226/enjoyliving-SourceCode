@@ -1,27 +1,41 @@
 <template>
   <div class="product-card-component">
-    <div class="product-img" :style="{backgroundImage:`url('${product.imgUrl}')`}"
-      @click="goToProduct">
-        <div class="product-img-inner">
-          <div>
-            <a href="#" class="icon" title="加到購物車"
-              @click.prevent.stop="addToCart">
-                <i class="fa fa-shopping-cart"></i>
-            </a>
-            <a href="#" class="icon" title="觀看產品"
-              @click.prevent.stop="goToProduct">
-                <i class="fa fa-eye"></i>
-            </a>
-          </div>
+    <div
+      class="product-img"
+      :style="{backgroundImage:`url('${product.imgUrl}')`}"
+      @click="goToProduct"
+    >
+      <div class="product-img-inner">
+        <div>
+          <a
+            href="#"
+            class="icon"
+            title="加到購物車"
+            @click.prevent.stop="addToCart"
+          >
+            <i class="fa fa-shopping-cart" />
+          </a>
+          <a
+            href="#"
+            class="icon"
+            title="觀看產品"
+            @click.prevent.stop="goToProduct"
+          >
+            <i class="fa fa-eye" />
+          </a>
         </div>
+      </div>
     </div>
     <div class="desc">
       <h3 class="mb-1">
-          {{ product.title }}
+        {{ product.title }}
       </h3>
       <span class="price">{{ product.price | currency }}</span>
     </div>
-    <div class="discount" v-if="discount">
+    <div
+      v-if="discount"
+      class="discount"
+    >
       <span>{{ discount }}折</span>
     </div>
   </div>
@@ -50,7 +64,7 @@ export default {
       this.$router.push(`/product/${this.product.id}`);
     },
     addToCart() {
-      this.$emit('change-isLoading', true);
+      this.$bus.$emit('update:loading', true);
       const cartArray = JSON.parse(localStorage.getItem('cartProducts')) || [];
       const cacheId = cartArray.map((product) => product.product_id);
       if (cacheId.includes(this.product.id)) {
@@ -77,7 +91,7 @@ export default {
       this.$bus.$emit('update:cartNum');
       this.$bus.$emit('message:push', '已加入購物車', 'primary');
       setTimeout(() => {
-        this.$emit('change-isLoading', false);
+        this.$bus.$emit('update:loading', false);
       }, 500);
     },
   },

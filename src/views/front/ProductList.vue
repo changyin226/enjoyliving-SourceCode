@@ -1,7 +1,6 @@
 <template>
   <div class="product-list-page">
-    <loading :active.sync="isLoading" color="#00d2ff" :lock-scroll="true"></loading>
-    <div class="banner"></div>
+    <div class="banner" />
     <div class="container py-5">
       <div class="row justify-content-center py-5">
         <div class="col-md-8">
@@ -12,38 +11,77 @@
           </div>
         </div>
       </div>
-      <div class="filter mb-5" v-if="products.length">
-        <div class="filter-tabs row" v-if="screenWidth > 768">
-          <div class="col-4 col-md-2 mb-3" v-for="item in categories" :key="item">
+      <div
+        v-if="!loadingSuccess"
+        class="blank"
+      />
+      <div
+        v-if="products.length"
+        class="filter mb-5"
+      >
+        <div
+          v-if="screenWidth > 768"
+          class="filter-tabs row"
+        >
+          <div
+            v-for="item in categories"
+            :key="item"
+            class="col-4 col-md-2 mb-3"
+          >
             <router-link
               :to="{params: { category: TCtoEN[item] , page: 1}}"
               class="btn"
               :class="{ active : category === item}"
-              @click.native="category = item">
+              @click.native="category = item"
+            >
               {{ item }}
             </router-link>
           </div>
         </div>
-        <div class="filter-select" v-else>
-          <select class="custom-select mb-4" v-model="category"
-            @change="selectChangePage(category)">
-            <option :value="item" v-for="item in categories" :key="item">
+        <div
+          v-else
+          class="filter-select"
+        >
+          <select
+            v-model="category"
+            class="custom-select mb-4"
+            @change="selectChangePage(category)"
+          >
+            <option
+              v-for="item in categories"
+              :key="item"
+              :value="item"
+            >
               {{ item }}
             </option>
           </select>
         </div>
       </div>
-        <div class="row">
-          <div class="col-md-4"
-            v-for="product in perPageProducts[currentPage - 1]"
-            :key="category + product.id">
-            <ProductCard :product="product" @change-isLoading="isLoading = $event"></ProductCard>
-          </div>
+      <div class="row">
+        <div
+          v-for="product in perPageProducts[currentPage - 1]"
+          :key="category + product.id"
+          class="col-md-4"
+        >
+          <ProductCard
+            :product="product"
+          />
         </div>
-      <div class="row py-5" v-if="products[0]" :key="category + currentPage">
-        <div class="col" v-if="products.length" :key="category + currentPage">
-          <Pagination :current-page="currentPage" :total-page="perPageProducts.length">
-          </Pagination>
+      </div>
+      <div
+        v-if="products[0]"
+        :key="category + currentPage"
+        class="row py-5"
+      >
+        <div
+          v-if="products.length"
+          :key="category + currentPage"
+          class="col"
+        >
+          <Pagination
+            :current-page="currentPage"
+            :total-page="perPageProducts.length"
+          />
         </div>
       </div>
     </div>
@@ -55,8 +93,13 @@ import ProductCard from '@/components/front/ProductCard.vue';
 import Pagination from '@/components/front/Pagination.vue';
 
 export default {
+  components: {
+    ProductCard,
+    Pagination,
+  },
   data() {
     return {
+      loadingSuccess: false,
       products: [],
       category: '',
       currentPage: 0,
@@ -89,7 +132,6 @@ export default {
         'floor-lamps': '落地燈',
         'tv-benches': '電視櫃',
       },
-      isLoading: false,
     };
   },
   computed: {
@@ -118,16 +160,26 @@ export default {
       return categories;
     },
   },
+  mounted() {
+    this.getProducts();
+  },
+  activated() {
+    this.currentPage = parseInt(this.$route.params.page, 10);
+    this.category = this.ENtoTC[this.$route.params.category];
+    this.screenWidth = window.innerWidth;
+    this.$bus.$emit('hideOffCanvas');
+  },
   methods: {
     getProducts() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/products/all`;
       this.$http.get(api).then((response) => {
         if (response.data.success) {
           this.products = response.data.products.filter((product) => product.is_enabled);
-          this.isLoading = false;
+          this.loadingSuccess = true;
+          this.$bus.$emit('update:loading', false);
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$router.push('/');
           this.$bus.$emit('message:push', response.data.messages);
         }
@@ -137,25 +189,11 @@ export default {
       this.$router.push({ params: { category: this.TCtoEN[item], page: 1 } });
     },
   },
-  components: {
-    ProductCard,
-    Pagination,
-  },
-  mounted() {
-    this.getProducts();
-  },
   beforeRouteUpdate(to, from, next) {
     this.currentPage = parseInt(to.params.page, 10);
     this.category = this.ENtoTC[to.params.category];
     this.$bus.$emit('hideOffCanvas');
     next();
-  },
-  activated() {
-    this.currentPage = parseInt(this.$route.params.page, 10);
-    this.category = this.ENtoTC[this.$route.params.category];
-    this.screenWidth = window.innerWidth;
-    this.$bus.$emit('hideOffCanvas');
-    document.body.classList.remove('vld-shown');
   },
 };
 </script>

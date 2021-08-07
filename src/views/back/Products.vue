@@ -1,25 +1,38 @@
 <template>
   <div class="products-page">
-    <loading :active.sync="isLoading" color="#00d2ff" :lock-scroll="true"></loading>
     <div class="text-right">
-      <button type="button" class="btn btn-primary mt-4 text-white"
-        @click="openModal(true)">
+      <button
+        type="button"
+        class="btn btn-primary mt-4 text-white"
+        @click="openModal(true)"
+      >
         建立新的產品
       </button>
     </div>
-    <table class="table mt-4" v-if="products.length">
+    <table
+      v-if="products.length"
+      class="table mt-4"
+    >
       <thead>
         <tr class="text-center text-white">
-          <th class="d-none d-sm-table-cell">分類</th>
+          <th class="d-none d-sm-table-cell">
+            分類
+          </th>
           <th>產品名稱</th>
-          <th class="d-none d-sm-table-cell">原價</th>
+          <th class="d-none d-sm-table-cell">
+            原價
+          </th>
           <th>售價</th>
           <th>是否啟用</th>
           <th>編輯</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="text-center text-white" v-for="product in products" :key="product.id">
+        <tr
+          v-for="product in products"
+          :key="product.id"
+          class="text-center text-white"
+        >
           <td class="d-none d-sm-table-cell align-middle">
             {{ product.category }}
           </td>
@@ -33,32 +46,56 @@
             {{ product.price | currency }}
           </td>
           <td class="align-middle">
-            <span v-if="product.is_enabled" class="text-secondary align-middle">啟用</span>
-            <span v-else class="text-danger">未啟用</span>
+            <span
+              v-if="product.is_enabled"
+              class="text-secondary align-middle"
+            >啟用</span>
+            <span
+              v-else
+              class="text-danger"
+            >未啟用</span>
           </td>
           <td class="align-middle">
-            <button type="button" class="btn btn-outline-primary btn-sm mx-auto mx-md-1"
-              @click="openModal(false, product)">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm mx-auto mx-md-1"
+              @click="openModal(false, product)"
+            >
               編輯
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm mx-auto mx-md-1"
-              @click="deleteModal(product)">
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm mx-auto mx-md-1"
+              @click="deleteModal(product)"
+            >
               刪除
             </button>
           </td>
         </tr>
       </tbody>
     </table>
-    <div class="text-center border border-primary rounded mt-5 py-5"
-      v-if="loadingSuccess && !products.length">
+    <div
+      v-if="loadingSuccess && !products.length"
+      class="text-center border border-primary rounded mt-5 py-5"
+    >
       <p class="notice mb-0 py-5">
         沒有已建立的商品
       </p>
     </div>
-    <Pagination v-if="products.length" :pagination="pagination" class="my-5"></Pagination>
-    <ProductModal :modalTitle="modalTitle" :tempProduct="tempProduct"
-      @update-product="updateProduct"></ProductModal>
-    <DelProductModal :tempProduct="tempProduct" @delete-product="deleteProduct"></DelProductModal>
+    <Pagination
+      v-if="products.length"
+      :pagination="pagination"
+      class="my-5"
+    />
+    <ProductModal
+      :modal-title="modalTitle"
+      :temp-product="tempProduct"
+      @update-product="updateProduct"
+    />
+    <DelProductModal
+      :temp-product="tempProduct"
+      @delete-product="deleteProduct"
+    />
   </div>
 </template>
 
@@ -69,6 +106,11 @@ import ProductModal from '@/components/back/ProductModal.vue';
 import DelProductModal from '@/components/back/DelProductModal.vue';
 
 export default {
+  components: {
+    Pagination,
+    ProductModal,
+    DelProductModal,
+  },
   data() {
     return {
       products: [],
@@ -78,17 +120,16 @@ export default {
       currentPage: 0,
       isNew: false,
       loadingSuccess: false,
-      isLoading: false,
     };
   },
-  components: {
-    Pagination,
-    ProductModal,
-    DelProductModal,
+  mounted() {
+    this.currentPage = this.$route.params.page;
+    this.getProducts(this.currentPage);
+    this.$bus.$emit('update:routerActive');
   },
   methods: {
     getProducts(page = 1) {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       this.loadingSuccess = false;
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/products?page=${page}`;
       this.$http.get(api).then((response) => {
@@ -99,10 +140,10 @@ export default {
             this.$router.push({ params: { page: this.pagination.total_pages } });
           } else {
             this.loadingSuccess = true;
-            this.isLoading = false;
+            this.$bus.$emit('update:loading', false);
           }
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
@@ -124,7 +165,7 @@ export default {
       $('#delProductModal').modal('show');
     },
     updateProduct() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product`;
       let httpMethod = 'post';
       if (!this.isNew) {
@@ -137,13 +178,13 @@ export default {
           this.getProducts(this.currentPage);
         } else {
           $('#productModal').modal('hide');
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
     },
     deleteProduct() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${this.tempProduct.id}`;
       this.$http.delete(api).then((response) => {
         if (response.data.success) {
@@ -151,16 +192,11 @@ export default {
           this.getProducts(this.currentPage);
         } else {
           $('#delProductModal').modal('hide');
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
     },
-  },
-  mounted() {
-    this.currentPage = this.$route.params.page;
-    this.getProducts(this.currentPage);
-    this.$bus.$emit('update:routerActive');
   },
   beforeRouteUpdate(to, from, next) {
     this.currentPage = to.params.page;

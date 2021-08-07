@@ -1,14 +1,21 @@
 <template>
-<div class="alert-component">
-  <div class="alert alert-dismissible"
-    :class="'alert-' + item.status"
-    v-for="(item, i) in messages" :key="i">
-    <p>{{ item.message }}</p>
-    <button type="button" class="close" @click="removeMessage(i)">
-      <span>&times;</span>
-    </button>
+  <div class="alert-component">
+    <div
+      v-for="(item, i) in messages"
+      :key="i"
+      class="alert alert-dismissible"
+      :class="'alert-' + item.status"
+    >
+      <p>{{ item.message }}</p>
+      <button
+        type="button"
+        class="close"
+        @click="removeMessage(i)"
+      >
+        <span>&times;</span>
+      </button>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -18,6 +25,12 @@ export default {
     return {
       messages: [],
     };
+  },
+  created() {
+    const vm = this;
+    vm.$bus.$on('message:push', (message, status = 'danger') => {
+      vm.updateMessage(message, status);
+    });
   },
   methods: {
     updateMessage(message, status) {
@@ -42,12 +55,6 @@ export default {
         });
       }, 5000);
     },
-  },
-  created() {
-    const vm = this;
-    vm.$bus.$on('message:push', (message, status = 'danger') => {
-      vm.updateMessage(message, status);
-    });
   },
 };
 </script>

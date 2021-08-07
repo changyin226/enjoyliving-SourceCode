@@ -1,12 +1,22 @@
 <template>
-  <div class="modal fade" id="delCouponModal">
+  <div
+    id="delCouponModal"
+    class="modal fade"
+  >
     <div class="modal-dialog">
       <div class="modal-content border-0">
         <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title" id="exampleModalLabel">
+          <h5
+            id="exampleModalLabel"
+            class="modal-title"
+          >
             <span>刪除優惠卷</span>
           </h5>
-          <button type="button" class="close" data-dismiss="modal">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+          >
             <span>&times;</span>
           </button>
         </div>
@@ -16,11 +26,20 @@
           </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary text-white"
-            data-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-outline-secondary text-white"
+            data-dismiss="modal"
+          >
             取消
           </button>
-          <button type="button" class="btn btn-danger" @click="deleteCoupon">確認刪除</button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            @click="deleteCoupon"
+          >
+            確認刪除
+          </button>
         </div>
       </div>
     </div>

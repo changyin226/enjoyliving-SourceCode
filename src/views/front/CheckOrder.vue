@@ -1,35 +1,58 @@
 <template>
   <div class="check-order-page">
-    <loading :active.sync="isLoading" color="#00d2ff" :lock-scroll="true"></loading>
+    <div
+      v-if="!loadingSuccess"
+      class="blank"
+    />
     <div v-if="cart.carts && cart.carts.length">
-      <div class="row justify-content-center mb-5 animate__animated"
-        v-waypoint="{ active: true, callback: onWaypointList }">
+      <div
+        v-waypoint="{ active: true, callback: onWaypointList }"
+        class="row justify-content-center mb-5 animate__animated"
+      >
         <div class="col-md-8 text-center">
           <table class="table mb-4">
             <thead>
-              <th width="20%"></th>
+              <th width="20%" />
               <th>品名</th>
               <th>數量</th>
               <th>價格</th>
             </thead>
             <tbody>
-              <tr v-for="item in cart.carts" :key="item.id">
+              <tr
+                v-for="item in cart.carts"
+                :key="item.id"
+              >
                 <td class="align-middle">
-                  <img :src="item.product.imgUrl2" alt="商品圖片" class="w-100">
+                  <img
+                    :src="item.product.imgUrl2"
+                    alt="商品圖片"
+                    class="w-100"
+                  >
                 </td>
                 <td class="align-middle">
                   <router-link :to="`/product/${item.product.id}`">
                     {{ item.product.title }}
                   </router-link>
-                  <span class="d-block text-secondary mt-1" v-if="item.coupon">
+                  <span
+                    v-if="item.coupon"
+                    class="d-block text-secondary mt-1"
+                  >
                     已套用優惠券
                   </span>
                 </td>
-                <td class="align-middle">{{ item.qty }}{{ item.product.unit }}</td>
-                <td class="align-middle text-right" v-if="!item.coupon">
+                <td class="align-middle">
+                  {{ item.qty }}{{ item.product.unit }}
+                </td>
+                <td
+                  v-if="!item.coupon"
+                  class="align-middle text-right"
+                >
                   {{ item.product.price * item.qty | currency }}
                 </td>
-                <td class="align-middle text-right" v-else>
+                <td
+                  v-else
+                  class="align-middle text-right"
+                >
                   <del>{{ item.product.price * item.qty | currency }}</del>
                   <span class="d-block text-secondary mt-1">
                     {{ item.final_total | currency }}
@@ -39,11 +62,23 @@
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="3" class="text-right">總計</td>
-                <td class="text-right">{{ cart.total | currency }}</td>
+                <td
+                  colspan="3"
+                  class="text-right"
+                >
+                  總計
+                </td>
+                <td class="text-right">
+                  {{ cart.total | currency }}
+                </td>
               </tr>
               <tr v-if="cart.final_total !== cart.total">
-                <td colspan="3" class="text-right text-secondary">折扣價</td>
+                <td
+                  colspan="3"
+                  class="text-right text-secondary"
+                >
+                  折扣價
+                </td>
                 <td class="text-right text-secondary">
                   {{ cart.final_total | currency }}
                 </td>
@@ -51,90 +86,156 @@
             </tfoot>
           </table>
           <div class="input-group">
-            <input type="text" class="form-control" name="優惠碼"
+            <input
               v-model="couponCode"
+              type="text"
+              class="form-control"
+              name="優惠碼"
+              placeholder="請輸入優惠碼"
               @keyup.enter="addCouponCode"
-              placeholder="請輸入優惠碼">
+            >
             <div class="input-group-append">
-              <button type="button" class="btn" @click="addCouponCode">
+              <button
+                type="button"
+                class="btn"
+                @click="addCouponCode"
+              >
                 套用優惠碼
               </button>
             </div>
           </div>
         </div>
       </div>
-      <h2 class="text-center py-5 animate__animated"
-        v-waypoint="{ active: true, callback: onWaypointList }">
+      <h2
+        v-waypoint="{ active: true, callback: onWaypointList }"
+        class="text-center py-5 animate__animated"
+      >
         收件人資料
       </h2>
-        <ValidationObserver v-slot="{ invalid }">
-          <div class="row justify-content-center animate__animated"
-            v-waypoint="{ active: true, callback: onWaypointList }">
-            <form class="col-md-8" @submit.prevent>
-              <ValidationProvider rules="required|email" v-slot="{ errors, classes }">
-                <div class="form-group">
-                  <label for="email">
-                    Email
-                    <span class="badge badge-danger">必填*</span>
-                  </label>
-                  <input type="email" id="email" name="信箱" v-model="form.user.email"
-                      class="form-control" :class="classes"
-                      placeholder="請輸入 Email">
-                  <span class="invalid-feedback">{{ errors[0] }}</span>
-                </div>
-              </ValidationProvider>
-              <ValidationProvider rules="required" v-slot="{ errors, classes }">
-                <div class="form-group">
-                  <label for="username">
-                    姓名
-                    <span class="badge badge-danger">必填*</span>
-                  </label>
-                  <input type="text" id="username" name="姓名" v-model="form.user.name"
-                      class="form-control" :class="classes"
-                      placeholder="請輸入姓名">
-                  <span class="invalid-feedback">{{ errors[0] }}</span>
-                </div>
-              </ValidationProvider>
-              <ValidationProvider rules="required" v-slot="{ errors, classes }">
-                <div class="form-group">
-                  <label for="usertel">
-                    電話
-                    <span class="badge badge-danger">必填*</span>
-                  </label>
-                  <input type="tel" id="usertel" name="電話" v-model="form.user.tel"
-                      class="form-control" :class="classes"
-                      placeholder="請輸入電話">
-                  <span class="invalid-feedback">{{ errors[0] }}</span>
-                </div>
-              </ValidationProvider>
-              <ValidationProvider rules="required" v-slot="{ errors, classes }">
-                <div class="form-group">
-                  <label for="useraddress">
-                    地址
-                    <span class="badge badge-danger">必填*</span>
-                  </label>
-                  <input type="text" id="useraddress" name="地址" v-model="form.user.address"
-                      class="form-control" :class="classes"
-                      placeholder="請輸入地址">
-                  <span class="invalid-feedback">{{ errors[0] }}</span>
-                </div>
-              </ValidationProvider>
+      <ValidationObserver v-slot="{ invalid }">
+        <div
+          v-waypoint="{ active: true, callback: onWaypointList }"
+          class="row justify-content-center animate__animated"
+        >
+          <form
+            class="col-md-8"
+            @submit.prevent
+          >
+            <ValidationProvider
+              v-slot="{ errors, classes }"
+              rules="required|email"
+            >
               <div class="form-group">
-                <label for="message">留言</label>
-                <textarea id="message" name="message" class="form-control" cols="30" rows="10"
-                  v-model="form.message"></textarea>
+                <label for="email">
+                  Email
+                  <span class="badge badge-danger">必填*</span>
+                </label>
+                <input
+                  id="email"
+                  v-model="form.user.email"
+                  type="email"
+                  name="信箱"
+                  class="form-control"
+                  :class="classes"
+                  placeholder="請輸入 Email"
+                >
+                <span class="invalid-feedback">{{ errors[0] }}</span>
               </div>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, classes }"
+              rules="required"
+            >
+              <div class="form-group">
+                <label for="username">
+                  姓名
+                  <span class="badge badge-danger">必填*</span>
+                </label>
+                <input
+                  id="username"
+                  v-model="form.user.name"
+                  type="text"
+                  name="姓名"
+                  class="form-control"
+                  :class="classes"
+                  placeholder="請輸入姓名"
+                >
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </div>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, classes }"
+              rules="required"
+            >
+              <div class="form-group">
+                <label for="usertel">
+                  電話
+                  <span class="badge badge-danger">必填*</span>
+                </label>
+                <input
+                  id="usertel"
+                  v-model="form.user.tel"
+                  type="tel"
+                  name="電話"
+                  class="form-control"
+                  :class="classes"
+                  placeholder="請輸入電話"
+                >
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </div>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors, classes }"
+              rules="required"
+            >
+              <div class="form-group">
+                <label for="useraddress">
+                  地址
+                  <span class="badge badge-danger">必填*</span>
+                </label>
+                <input
+                  id="useraddress"
+                  v-model="form.user.address"
+                  type="text"
+                  name="地址"
+                  class="form-control"
+                  :class="classes"
+                  placeholder="請輸入地址"
+                >
+                <span class="invalid-feedback">{{ errors[0] }}</span>
+              </div>
+            </ValidationProvider>
+            <div class="form-group">
+              <label for="message">留言</label>
+              <textarea
+                id="message"
+                v-model="form.message"
+                name="message"
+                class="form-control"
+                cols="30"
+                rows="10"
+              />
+            </div>
             <div class="text-right mb-5">
-              <button type="submit" class="btn" :disabled="invalid"
-              data-toggle="modal" data-target="#comfirmModal">送出訂單</button>
+              <button
+                type="submit"
+                class="btn"
+                :disabled="invalid"
+                data-toggle="modal"
+                data-target="#comfirmModal"
+              >
+                送出訂單
+              </button>
             </div>
           </form>
         </div>
       </ValidationObserver>
     </div>
-    <div class="row justify-content-center py-5 animate__animated"
-      v-if="loadingSuccess && !cart.length"
-      v-waypoint="{ active: true, callback: onWaypointList }">
+    <div
+      v-if="loadingSuccess && !cart.carts"
+      v-waypoint="{ active: true, callback: onWaypointList }"
+      class="row justify-content-center py-5 animate__animated"
+    >
       <div class="col-md-6 text-center border border-primary rounded py-5">
         <p class="notice mb-4">
           目前購物車是空的
@@ -142,10 +243,15 @@
           快去產品頁逛逛吧
           <br>
         </p>
-        <router-link to="/productlist/all/1" class="btn">SHOP</router-link>
+        <router-link
+          to="/productlist/all/1"
+          class="btn"
+        >
+          SHOP
+        </router-link>
       </div>
     </div>
-    <comfirmModal @create-order="createOrder"></comfirmModal>
+    <comfirmModal @create-order="createOrder" />
   </div>
 </template>
 
@@ -154,6 +260,9 @@ import comfirmModal from '@/components/front/comfirmModal.vue';
 import $ from 'jquery';
 
 export default {
+  components: {
+    comfirmModal,
+  },
   data() {
     return {
       cart: [],
@@ -168,12 +277,15 @@ export default {
         message: '',
       },
       loadingSuccess: false,
-      isLoading: false,
     };
+  },
+  mounted() {
+    this.postCartList();
+    this.$emit('change-step', 1);
   },
   methods: {
     postCartList() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const cacheID = [];
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
       this.$http.get(api)
@@ -203,27 +315,27 @@ export default {
             this.getCartList();
           } else {
             this.loadingSuccess = true;
-            this.isLoading = false;
+            this.$bus.$emit('update:loading', false);
           }
         });
     },
     getCartList() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/cart`;
       this.$http.get(api).then((response) => {
         if (response.data.success) {
           this.cart = response.data.data;
-          this.isLoading = false;
-          this.loadingSuccess = false;
+          this.loadingSuccess = true;
+          this.$bus.$emit('update:loading', false);
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$router.push('/cart');
           this.$bus.$emit('message:push', response.data.messages);
         }
       });
     },
     addCouponCode() {
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/coupon`;
       const code = {
         code: this.couponCode,
@@ -233,7 +345,7 @@ export default {
           this.getCartList();
           this.$bus.$emit('message:push', response.data.message, 'primary');
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
@@ -241,7 +353,7 @@ export default {
     },
     createOrder() {
       $('#comfirmModal').modal('hide');
-      this.isLoading = true;
+      this.$bus.$emit('update:loading', true);
       const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/order`;
       this.$http.post(api, { data: this.form }).then((response) => {
         if (response.data.success) {
@@ -250,7 +362,7 @@ export default {
           this.$bus.$emit('update:cartNum');
           this.$bus.$emit('message:push', response.data.message, 'primary');
         } else {
-          this.isLoading = false;
+          this.$bus.$emit('update:loading', false);
           this.$bus.$emit('message:push', response.data.message);
         }
       });
@@ -265,13 +377,6 @@ export default {
         }, index * 300);
       }
     },
-  },
-  components: {
-    comfirmModal,
-  },
-  mounted() {
-    this.postCartList();
-    this.$emit('change-step', 1);
   },
 };
 </script>

@@ -1,12 +1,19 @@
 <template>
-  <div class="modal fade" id="comfirmModal">
+  <div
+    id="comfirmModal"
+    class="modal fade"
+  >
     <div class="modal-dialog">
       <div class="modal-content border-0">
         <div class="modal-header bg-primary text-white">
           <h5 class="modal-title">
             <span>送出訂單</span>
           </h5>
-          <button type="button" class="close" data-dismiss="modal">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+          >
             <span>&times;</span>
           </button>
         </div>
@@ -18,12 +25,18 @@
           </p>
         </div>
         <div class="modal-footer bg-light">
-          <button type="button" class="btn btn-outline-secondary"
-            data-dismiss="modal">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            data-dismiss="modal"
+          >
             取消
           </button>
-          <button type="button" class="btn btn-primary text-white"
-            @click="createOrder">
+          <button
+            type="button"
+            class="btn btn-primary text-white"
+            @click="createOrder"
+          >
             送出訂單
           </button>
         </div>
