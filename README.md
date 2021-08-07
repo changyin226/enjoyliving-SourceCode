@@ -1,4 +1,4 @@
-# vue-final-homework
+# Vue-E-commerce
 
 ## Project setup
 ```
